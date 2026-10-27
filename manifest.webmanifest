@@ -1,0 +1,11 @@
+{
+  "name": "25 Cheeses · Level 1",
+  "short_name": "25 Cheeses",
+  "description": "Estudia los 25 quesos del Level 1 de la Academy of Cheese.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbf7ef",
+  "theme_color": "#f4b63f",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
