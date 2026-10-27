@@ -10,7 +10,7 @@
       tabs: { library: "Fichas", cards: "Tarjetas", quiz: "Quiz", matrix: "Tabla", progress: "Progreso" },
       switchTo: "EN", switchLabel: "Switch to English",
       lib: { title: "Los 25 quesos", search: "Buscar por nombre, país, leche…", all: "Todos", none: "Sin resultados.", back: "← Volver a las fichas", prev: "← Anterior", next: "Siguiente →" },
-      f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen" },
+      f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", rennet: "Cuajo", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen" },
       cards: {
         title: "Tarjetas", help: "Toca la tarjeta para darle la vuelta. Marca si te la sabes; las que no, vuelven a salir.",
         all: "Todas (25)", pending: (n) => `Solo las que no sé (${n})`, reverse: "Al revés: adivina el queso",
@@ -18,7 +18,7 @@
         tap: "Toca para ver la ficha", which: "¿Qué queso es?", again: "🔁 Repasar", gotIt: "✅ Me la sé"
       },
       quiz: {
-        title: "Quiz", intro: "Preguntas tipo test generadas a partir de las fichas: leche, país, región, protección, Make, Post-Make, aspecto y sabor.",
+        title: "Quiz", intro: "Preguntas tipo test generadas a partir de las fichas: leche, país, región, protección, Make, Post-Make (y sus sub-clases), aspecto y sabor.",
         best: (s, t) => `Mejor resultado: ${s}/${t}`, count: "Número de preguntas", focus: "Enfoque",
         allCheeses: "Todos los quesos", weak: "Mis puntos débiles", start: "Empezar",
         progress: (i, n, s) => `Pregunta ${i} de ${n} · Aciertos: ${s}`,
@@ -29,7 +29,9 @@
           milk: (n) => `¿De qué leche se elabora ${n}?`,
           country: (n) => `¿De qué país es ${n}?`,
           make: (n) => `¿Cuál es la clase Make de ${n}?`,
-          postMake: (n) => `¿Qué clase Post-Make corresponde a ${n}?`,
+          postMake: (n) => `¿Cuál de estas clases Post-Make tiene ${n}?`,
+          subMake: (n) => `¿Cuál es la sub-clase Make de ${n}?`,
+          subPostMake: (n) => `¿Qué sub-clase Post-Make tiene ${n}?`,
           status: (n) => `¿Qué tipo de protección tiene ${n}?`,
           region: (n) => `¿De qué región procede ${n}?`,
           fact: (t) => `¿Qué queso es? “${t}”`,
@@ -45,7 +47,7 @@
       matrix: {
         title: "Tabla Make / Post-Make", help: "Cada queso tiene una sola clase Make y puede tener una o más Post-Make. Toca un queso para ver su ficha.",
         corner: "Make ↓ / Post-Make →", makes: "Clases Make", posts: "Clases Post-Make",
-        note: "⚠️ La clasificación Post-Make de algunos quesos (p. ej. Block Cheddar, Aged Gouda, Feta, Gruyère, Mimolette) es una interpretación; contrástala con las crib sheets oficiales de la Academy of Cheese."
+        note: "Las sub-clases solo aparecen en los quesos en los que se han comprobado con las fichas oficiales de la Academy of Cheese."
       },
       prog: {
         title: "Tu progreso", known: "Tarjetas que te sabes:", answered: "Preguntas respondidas:", global: "Acierto global:",
@@ -57,7 +59,7 @@
       tabs: { library: "Profiles", cards: "Cards", quiz: "Quiz", matrix: "Matrix", progress: "Progress" },
       switchTo: "ES", switchLabel: "Cambiar a español",
       lib: { title: "The 25 cheeses", search: "Search by name, country, milk…", all: "All", none: "No results.", back: "← Back to profiles", prev: "← Previous", next: "Next →" },
-      f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts" },
+      f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", rennet: "Rennet", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts" },
       cards: {
         title: "Flashcards", help: "Tap the card to flip it. Mark whether you know it; the ones you don't will come back.",
         all: "All (25)", pending: (n) => `Only the ones I don't know (${n})`, reverse: "Reverse: guess the cheese",
@@ -65,7 +67,7 @@
         tap: "Tap to see the profile", which: "Which cheese is it?", again: "🔁 Review again", gotIt: "✅ I know it"
       },
       quiz: {
-        title: "Quiz", intro: "Multiple-choice questions generated from the profiles: milk, country, region, protection, Make, Post-Make, appearance and flavour.",
+        title: "Quiz", intro: "Multiple-choice questions generated from the profiles: milk, country, region, protection, Make, Post-Make (and their sub-classes), appearance and flavour.",
         best: (s, t) => `Best score: ${s}/${t}`, count: "Number of questions", focus: "Focus",
         allCheeses: "All cheeses", weak: "My weak spots", start: "Start",
         progress: (i, n, s) => `Question ${i} of ${n} · Correct: ${s}`,
@@ -76,7 +78,9 @@
           milk: (n) => `Which milk is ${n} made from?`,
           country: (n) => `Which country is ${n} from?`,
           make: (n) => `What is the Make class of ${n}?`,
-          postMake: (n) => `Which Post-Make class applies to ${n}?`,
+          postMake: (n) => `Which of these Post-Make classes does ${n} have?`,
+          subMake: (n) => `What is the Make sub-class of ${n}?`,
+          subPostMake: (n) => `Which Post-Make sub-class does ${n} have?`,
           status: (n) => `What type of protection does ${n} have?`,
           region: (n) => `Which region does ${n} come from?`,
           fact: (t) => `Which cheese is it? “${t}”`,
@@ -92,7 +96,7 @@
       matrix: {
         title: "Make / Post-Make matrix", help: "Each cheese has a single Make class and may have one or more Post-Make classes. Tap a cheese to see its profile.",
         corner: "Make ↓ / Post-Make →", makes: "Make classes", posts: "Post-Make classes",
-        note: "⚠️ The Post-Make classification of some cheeses (e.g. Block Cheddar, Aged Gouda, Feta, Gruyère, Mimolette) is an interpretation; check it against the official Academy of Cheese crib sheets."
+        note: "Sub-classes are only shown for cheeses where they have been checked against the official Academy of Cheese profiles."
       },
       prog: {
         title: "Your progress", known: "Cards you know:", answered: "Questions answered:", global: "Overall accuracy:",
@@ -129,6 +133,12 @@
   const distinct = (arr) => [...new Set(arr)];
   const byId = Object.fromEntries(CHEESES.map((c) => [c.id, c]));
   const makeClass = (m) => "make-" + m.replace(/\s/g, "");
+  // Clase con su sub-clase entre paréntesis, si la hay
+  const withSub = (cls, subCls) => (subCls ? `${cls} (${subCls})` : cls);
+  const postList = (c) => c.postMake.map((p, i) => withSub(p, c.subPostMake[i])).join(" + ");
+  const classTags = (c, prefix = "") =>
+    `<span class="tag ${makeClass(c.make)}">${prefix && "Make: "}${esc(withSub(c.make, c.subMake))}</span>` +
+    c.postMake.map((p, i) => `<span class="tag">${prefix && "Post-Make: "}${esc(withSub(p, c.subPostMake[i]))}</span>`).join("");
 
   // Claves neutras (independientes del idioma) para el quiz
   const SPECIES_KEY = { Vaca: "cow", Oveja: "sheep", Cabra: "goat", "Búfala": "buffalo" };
@@ -202,7 +212,7 @@
       const q = libFilter.q.toLowerCase();
       const list = CHEESES.map(L).filter((c) =>
         (libFilter.make === "all" || c.make === libFilter.make) &&
-        (!q || [c.name, c.country, c.region, c.milk, c.make, ...c.postMake].join(" ").toLowerCase().includes(q)));
+        (!q || [c.name, c.country, c.region, c.milk, c.make, c.subMake, ...c.postMake, ...c.subPostMake].join(" ").toLowerCase().includes(q)));
       grid.replaceChildren($(list.map((c) => `
         <button class="card" data-id="${c.id}">
           <div class="name">${esc(c.name)}</div>
@@ -229,12 +239,13 @@
     const f = T().f;
     return `
       <h2>${esc(c.name)}</h2>
-      <span class="tag ${makeClass(c.make)}">Make: ${c.make}</span>${c.postMake.map((p) => `<span class="tag">Post-Make: ${p}</span>`).join("")}
+      ${classTags(c, true)}
       <dl>
         <dt>${f.country}</dt><dd>${esc(c.country)}</dd>
         <dt>${f.region}</dt><dd>${esc(c.region)}</dd>
         <dt>${f.milk}</dt><dd>${esc(c.milk)}</dd>
         <dt>${f.treatment}</dt><dd>${esc(c.treatment)}</dd>
+        ${c.rennet ? `<dt>${f.rennet}</dt><dd>${esc(c.rennet)}</dd>` : ""}
         <dt>${f.status}</dt><dd>${esc(c.status)}</dd>
         <dt>${f.appearance}</dt><dd>${esc(c.appearance)}</dd>
         <dt>${f.flavour}</dt><dd>${esc(c.flavour)}</dd>
@@ -305,7 +316,7 @@
     const reverse = deck.mode === "reverse";
     const front = reverse
       ? `<div style="font-size:1rem;font-weight:500;text-align:left">
-           <p><b>${esc(countryLabel(countryKey(raw)))}</b> · ${esc(speciesLabel(speciesKey(raw)))} · ${c.make} · ${c.postMake.join(", ")}</p>
+           <p><b>${esc(countryLabel(countryKey(raw)))}</b> · ${esc(speciesLabel(speciesKey(raw)))} · ${esc(withSub(c.make, c.subMake))} · ${esc(postList(c))}</p>
            <p>${esc(mask(c.appearance, c))}</p><p class="muted">${esc(mask(c.flavour, c))}</p>
            <p class="muted small">${t.which}</p></div>`
       : `<div>${esc(c.name)}</div><div class="muted small" style="font-weight:400;margin-top:8px">${t.tap}</div>`;
@@ -313,7 +324,7 @@
       : `<p><b>${esc(c.country)}</b> — ${esc(c.region)}</p>
          <p>🥛 ${esc(c.milk)} · ${esc(c.treatment)}</p>
          <p>🏷️ ${esc(c.status)}</p>
-         <p><span class="tag ${makeClass(c.make)}">Make: ${c.make}</span>${c.postMake.map((p) => `<span class="tag">${p}</span>`).join("")}</p>
+         <p>${classTags(c, true)}</p>
          <p>👀 ${esc(c.appearance)}</p><p>👅 ${esc(c.flavour)}</p>
          ${factsList(c)}`;
     box.replaceChildren($(`
@@ -370,7 +381,19 @@
     (c) => ({ type: "milk", kind: "species", options: optionsFrom(speciesKey(c), Object.keys(UI.es.species)), answer: speciesKey(c) }),
     (c) => ({ type: "country", kind: "country", options: optionsFrom(countryKey(c), CHEESES.map(countryKey)), answer: countryKey(c) }),
     (c) => ({ type: "make", kind: "plain", options: shuffle(Object.keys(MAKE_CLASSES)), answer: c.make }),
-    (c) => ({ type: "postMake", kind: "plain", options: optionsFrom(c.postMake[0], POST_KEYS.filter((p) => !c.postMake.includes(p))), answer: c.postMake[0] }),
+    (c) => {
+      // un queso puede tener varios Post-Make: se pregunta por uno y los distractores son clases que no tiene
+      const p = pick(c.postMake);
+      return { type: "postMake", kind: "plain", options: optionsFrom(p, POST_KEYS.filter((x) => !c.postMake.includes(x))), answer: p };
+    },
+    (c) => c.subMake && ({ type: "subMake", kind: "plain", options: optionsFrom(c.subMake, CHEESES.map((x) => x.subMake).filter(Boolean)), answer: c.subMake }),
+    (c) => {
+      const subs = c.subPostMake.filter(Boolean);
+      if (!subs.length) return null;
+      const s = pick(subs);
+      return { type: "subPostMake", kind: "plain", answer: s,
+        options: optionsFrom(s, CHEESES.flatMap((x) => x.subPostMake).filter((x) => x && !subs.includes(x))) };
+    },
     (c) => ({ type: "status", kind: "status", options: ["PDO", "PGI", "none"], answer: statusKey(c) }),
     (c) => ({
       type: "region", kind: "region", answer: c.id,
@@ -381,7 +404,10 @@
     (c) => ({ type: "flavour", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "whichMake", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => x.make !== c.make)), answer: c.id }),
     (c) => ({ type: "whichMilk", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => speciesKey(x) !== speciesKey(c))), answer: c.id }),
-    (c) => ({ type: "whichPost", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => !x.postMake.includes(c.postMake[0]))), answer: c.id })
+    (c) => {
+      const p = pick(c.postMake);
+      return { type: "whichPost", kind: "cheese", pm: p, options: optionsFrom(c.id, otherIds(c, (x) => !x.postMake.includes(p))), answer: c.id };
+    }
   ];
 
   // Texto de la pregunta en el idioma actual
@@ -394,7 +420,7 @@
       case "flavour": return t.flavour(mask(c.flavour, c));
       case "whichMake": return t.whichMake(c.make);
       case "whichMilk": return t.whichMilk(speciesLabel(speciesKey(q.cheese)));
-      case "whichPost": return t.whichPost(c.postMake[0]);
+      case "whichPost": return t.whichPost(q.pm);
       default: return t[q.type](c.name);
     }
   }
@@ -402,7 +428,7 @@
   function makeQuestion(c) {
     for (let tries = 0; tries < 10; tries++) {
       const q = pick(generators)(c);
-      if (q.options.length >= 2 && q.options.includes(q.answer)) return { ...q, cheese: c };
+      if (q && q.options.length >= 2 && q.options.includes(q.answer)) return { ...q, cheese: c };
     }
   }
 
@@ -492,7 +518,7 @@
     const c = L(q.cheese);
     view.querySelector("#after").replaceChildren($(`
       <div class="explain">${ok ? t.correct : `${t.wrong} <b>${esc(show(q.answer))}</b>`}<br>
-        <b>${esc(c.name)}</b>: ${esc(countryLabel(countryKey(q.cheese)))} · ${esc(c.milk)} · ${esc(c.status)} · Make ${c.make} · ${c.postMake.join(", ")}
+        <b>${esc(c.name)}</b>: ${esc(countryLabel(countryKey(q.cheese)))} · ${esc(c.milk)} · ${esc(c.status)} · Make ${esc(withSub(c.make, c.subMake))} · Post-Make ${esc(postList(c))}
       </div>
       <div class="row" style="margin-top:12px;justify-content:flex-end">
         <button class="btn primary" id="next">${quiz.i + 1 < quiz.questions.length ? t.next : t.result}</button>
@@ -527,7 +553,10 @@
     const t = T().matrix;
     const makes = Object.keys(MAKE_CLASSES);
     const cell = (m, p) => CHEESES.filter((c) => c.make === m && c.postMake.includes(p))
-      .map((c) => `<button data-id="${c.id}">${esc(c.name)}</button>`).join("");
+      .map((c) => {
+        const sp = c.subPostMake[c.postMake.indexOf(p)];
+        return `<button data-id="${c.id}">${esc(c.name)}${sp ? `<small>${esc(sp)}</small>` : ""}</button>`;
+      }).join("");
     view.append($(`
       <h2>${t.title}</h2>
       <p class="muted small">${t.help}</p>

@@ -10,21 +10,21 @@ const MAKE_CLASSES_EN = {
 
 const POST_MAKE_CLASSES_EN = {
   "No Post-Make": "No significant post-make treatment: the character comes from the make process.",
-  "Internal Mould (Blue)": "Internal (blue) mould: Penicillium roqueforti; the paste is pierced to let air in.",
-  "External Mould / Yeast": "External mould or yeast: bloomy rind (Penicillium candidum) or wrinkly rind (Geotrichum).",
-  "Washed Rind": "Washed rind: washed with brine/alcohol, encouraging bacteria (B. linens) → orange rind and strong aroma.",
-  "Flavoured / Smoked": "Flavoured, coloured or smoked after (or during) the make.",
-  "Wrapped / Coated": "Wrapped or coated: cloth (cloth-bound), wax, plastic, etc.",
-  "Matured in Brine": "Matured in brine."
+  "External mould/yeast ripened": "Ripened by external moulds or yeasts: bloomy rind (Penicillium candidum), wrinkly rind (Geotrichum) or other moulds.",
+  "Internal (blue) mould": "Internal (blue) mould: Penicillium roqueforti; the paste is pierced to let air in.",
+  "Washed rind": "Rind washed with brine or alcohol, encouraging bacteria (B. linens) → orange rind and strong aroma.",
+  "Flavoured or Smoked": "Flavoured or smoked; also includes other ripening agents such as mites (insects).",
+  "Wrapped, Rolled or Processed": "Wrapped, rolled or processed: cloth, wax or plastic, girdles, ash, pasta filata, etc."
 };
 
 const CHEESES_EN = {
   "goats-curd": {
     country: "United Kingdom",
-    region: "Various British producers",
+    region: "Evesham, Worcestershire (Cheese Cellar Dairy)",
     milk: "Goat",
-    treatment: "Usually pasteurised",
-    status: "Not protected",
+    treatment: "Raw",
+    rennet: "Vegetarian",
+    status: "Brand",
     appearance: "Rindless; white, moist, spreadable, mousse-like paste.",
     flavour: "Fresh, lactic, clean, slightly acidic and citrusy.",
     facts: [
@@ -42,7 +42,7 @@ const CHEESES_EN = {
     appearance: "Porcelain-white balls with a smooth, shiny surface; kept in its own liquid.",
     flavour: "Milky, fresh, slightly acidic; elastic, juicy texture that releases whey.",
     facts: [
-      "Pasta filata: the curd is stretched in hot water and shaped by hand (mozzare = to cut off).",
+      "Pasta filata: the curd is stretched in hot water and shaped by hand (mozzare = to cut off). In the MPM model this is its Post-Make (Wrapped, Rolled or Processed).",
       "Shapes: tondo, bocconcini, ciliegine, treccia (plait)…",
       "Eaten very fresh, within a few days."
     ]
@@ -154,7 +154,7 @@ const CHEESES_EN = {
     appearance: "Small wheel with a natural rind; pale white, open paste.",
     flavour: "Mild, milky, slightly grassy and clean.",
     facts: [
-      "Can only be made on Gloucestershire farms with a herd of Gloucester cattle.",
+      "Must be made, at least in part, with milk from Old Gloucester cows.",
       "Traditionally made with partly skimmed milk; younger and lighter than Double Gloucester.",
       "It was the cheese the farmers ate themselves."
     ]
@@ -163,7 +163,7 @@ const CHEESES_EN = {
     country: "United Kingdom (England)",
     region: "Wensleydale, North Yorkshire",
     milk: "Cow",
-    treatment: "Pasteurised",
+    treatment: "Raw or pasteurised",
     status: "PGI (2013)",
     appearance: "White, crumbly, moist paste.",
     flavour: "Fresh, milky, acidic, mild honey; flaky.",
@@ -303,7 +303,7 @@ const CHEESES_EN = {
     country: "Italy",
     region: "Sardinia",
     milk: "Sheep",
-    treatment: "Raw or thermised/pasteurised",
+    treatment: "Usually pasteurised or thermised",
     status: "PDO / DOP (1996)",
     appearance: "Smooth rind from straw to brown; white to pale yellow paste.",
     flavour: "Dolce: mild, milky. Maturo: more intense, salty, nutty.",
@@ -338,7 +338,7 @@ const CHEESES_EN = {
     facts: [
       "Orange colour from annatto.",
       "Created under Louis XIV (Colbert) to replace Dutch Edam.",
-      "Cheese mites (cirons) feed on the rind and give it its pitted look."
+      "Its Post-Make comes from cheese mites (cirons, sub-Post-Make \"Insects\"): they feed on the rind, give it its pitted look and add flavour."
     ]
   },
   "le-gruyere": {

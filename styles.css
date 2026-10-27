@@ -168,6 +168,7 @@ table.matrix { border-collapse: collapse; width: 100%; font-size: .82rem; min-wi
 .matrix th { background: var(--surface-2); text-align: left; }
 .matrix td { background: var(--surface); }
 .matrix td button { all: unset; display: block; cursor: pointer; padding: 2px 0; text-decoration: underline dotted; }
+.matrix td button small { display: block; color: var(--muted); font-size: .72rem; text-decoration: none; }
 .legend dt { font-weight: 600; margin-top: 8px; }
 .legend dd { margin: 0; color: var(--muted); font-size: .9rem; }
 

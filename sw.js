@@ -1,5 +1,5 @@
 // Caché sencilla para poder estudiar sin conexión.
-const CACHE = "25cheeses-v2";
+const CACHE = "25cheeses-v3";
 const FILES = ["./", "index.html", "styles.css", "data.js", "data-en.js", "app.js", "manifest.webmanifest", "icon.svg"];
 
 self.addEventListener("install", (e) => {

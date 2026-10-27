@@ -2,6 +2,8 @@
 // Lista basada en "Level One: 25 Cheese Profiles" (2020) y en la matriz
 // "Level 1 – 25 cheeses by Make / Post-Make class". Compruébalo con las
 // fichas oficiales (crib sheets) de la Cheese Library por si hay cambios.
+// subMake / subPostMake: sub-clases oficiales del modelo Make/Post-Make.
+// subPostMake va en paralelo a postMake; null = aún no comprobada.
 
 const MAKE_CLASSES = {
   "Soft": "Blando: mucha humedad y pasta frágil. Incluye frescos y quesos pensados para madurar más.",
@@ -12,12 +14,11 @@ const MAKE_CLASSES = {
 
 const POST_MAKE_CLASSES = {
   "No Post-Make": "Sin tratamiento posterior relevante: el carácter viene del proceso de elaboración (Make).",
-  "Internal Mould (Blue)": "Moho interno (azul): Penicillium roqueforti, la pasta se pincha para que entre aire.",
-  "External Mould / Yeast": "Moho o levadura externos: corteza florida (Penicillium candidum) o arrugada (Geotrichum).",
-  "Washed Rind": "Corteza lavada: se lava con salmuera/alcohol, favorece bacterias (B. linens) → corteza naranja y aroma intenso.",
-  "Flavoured / Smoked": "Aromatizado, coloreado o ahumado tras (o durante) la elaboración.",
-  "Wrapped / Coated": "Envuelto o recubierto: tela (cloth-bound), cera, plástico, etc.",
-  "Matured in Brine": "Madurado en salmuera."
+  "External mould/yeast ripened": "Madurado por mohos o levaduras externos: corteza florida (Penicillium candidum), arrugada (Geotrichum) u otros mohos.",
+  "Internal (blue) mould": "Moho interno (azul): Penicillium roqueforti; la pasta se pincha para que entre aire.",
+  "Washed rind": "Corteza lavada con salmuera o alcohol; favorece bacterias (B. linens) → corteza naranja y aroma intenso.",
+  "Flavoured or Smoked": "Aromatizado o ahumado; también incluye otros agentes de maduración como los ácaros (insects).",
+  "Wrapped, Rolled or Processed": "Envuelto, enrollado o procesado: tela, cera o plástico, fajas, ceniza, pasta filata, etc."
 };
 
 const CHEESES = [
@@ -25,12 +26,15 @@ const CHEESES = [
     id: "goats-curd",
     name: "Goats' Curd",
     country: "Reino Unido",
-    region: "Varios productores británicos",
+    region: "Evesham, Worcestershire (Cheese Cellar Dairy)",
     milk: "Cabra",
-    treatment: "Normalmente pasteurizada",
-    status: "Sin protección",
+    treatment: "Cruda",
+    rennet: "Vegetal",
+    status: "Marca (Brand)",
     make: "Soft",
     postMake: ["No Post-Make"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Sin corteza; pasta blanca, húmeda, untuosa, tipo mousse.",
     flavour: "Fresco, láctico, limpio, ligeramente ácido y cítrico.",
     facts: [
@@ -48,11 +52,13 @@ const CHEESES = [
     treatment: "Pasteurizada o cruda (termizada)",
     status: "PDO / DOP (1996)",
     make: "Soft",
-    postMake: ["No Post-Make"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: ["Pasta filata"],
     appearance: "Bolas blancas de porcelana, superficie lisa y brillante; se conserva en su líquido.",
     flavour: "Láctico, fresco, ligeramente ácido; textura elástica y jugosa que suelta suero.",
     facts: [
-      "Pasta filata: la cuajada se estira en agua caliente y se moldea a mano (mozzare = cortar).",
+      "Pasta filata: la cuajada se estira en agua caliente y se moldea a mano (mozzare = cortar). En el modelo MPM es su Post-Make (Wrapped, Rolled or Processed).",
       "Formatos: tondo, bocconcini, ciliegine, treccia (trenza)…",
       "Se come muy fresca, en pocos días."
     ]
@@ -66,7 +72,9 @@ const CHEESES = [
     treatment: "Pasteurizada o cruda",
     status: "PDO / DOP (2002)",
     make: "Soft",
-    postMake: ["Matured in Brine"],
+    postMake: ["Flavoured or Smoked"],
+    subMake: "Predominantly rennet set cheese for further ripening",
+    subPostMake: [null],
     appearance: "Bloques blancos sin corteza, con pequeños agujeros irregulares.",
     flavour: "Salado, ácido, cremoso; desmenuzable pero húmedo.",
     facts: [
@@ -84,7 +92,9 @@ const CHEESES = [
     treatment: "Cruda",
     status: "PDO / AOP (AOC 1980)",
     make: "Soft",
-    postMake: ["External Mould / Yeast"],
+    postMake: ["External mould/yeast ripened"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Disco grande y plano (~36 cm, ~3 kg); corteza blanca aterciopelada con manchas rojizas; pasta paja.",
     flavour: "Champiñón, mantequilla, nuez, notas vegetales; se vuelve más intenso al madurar.",
     facts: [
@@ -102,7 +112,9 @@ const CHEESES = [
     treatment: "Cruda",
     status: "PDO / AOP (AOC 1983)",
     make: "Soft",
-    postMake: ["External Mould / Yeast"],
+    postMake: ["External mould/yeast ripened"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Disco pequeño (~11 cm, 250 g) en caja de madera; corteza blanca florida.",
     flavour: "Champiñón, mantequilla, col/ajo cuando está muy maduro.",
     facts: [
@@ -120,7 +132,9 @@ const CHEESES = [
     treatment: "Pasteurizada o cruda",
     status: "PGI / IGP (2017)",
     make: "Soft",
-    postMake: ["External Mould / Yeast"],
+    postMake: ["External mould/yeast ripened"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Cilindro alto; corteza blanca florida fina; pasta muy cremosa.",
     flavour: "Mantequilla, nata, ligeramente ácido; muy rico.",
     facts: [
@@ -138,7 +152,9 @@ const CHEESES = [
     treatment: "Cruda",
     status: "PDO / AOP (AOC 1976)",
     make: "Soft",
-    postMake: ["External Mould / Yeast"],
+    postMake: ["External mould/yeast ripened"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Pequeño tambor (~60 g); corteza fina blanca (Geotrichum) que se vuelve azul-gris al madurar.",
     flavour: "Joven: fresco, ácido, avellana. Maduro: más denso, intenso, a cabra.",
     facts: [
@@ -156,7 +172,9 @@ const CHEESES = [
     treatment: "Cruda o pasteurizada",
     status: "PDO / AOP (AOC 1975)",
     make: "Soft",
-    postMake: ["Washed Rind"],
+    postMake: ["Washed rind", "Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: ["Unflavoured wash solution", "Natural girdle"],
     appearance: "Disco con corteza naranja (coloreada con achiote/roucou) rodeado de 5 tiras de junco o papel.",
     flavour: "Aroma potente, carnoso, a corral; pasta más suave que su olor.",
     facts: [
@@ -174,7 +192,9 @@ const CHEESES = [
     treatment: "Cruda o pasteurizada",
     status: "PDO / AOP (AOC 1991)",
     make: "Soft",
-    postMake: ["Washed Rind"],
+    postMake: ["Washed rind"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Disco en caja de madera; corteza naranja-rojiza brillante y pegajosa; pasta fundente.",
     flavour: "Carnoso, salado, intenso; pasta cremosa, casi líquida en el centro.",
     facts: [
@@ -192,11 +212,13 @@ const CHEESES = [
     treatment: "Cruda o pasteurizada",
     status: "PDO (1996)",
     make: "Crumbly",
-    postMake: ["No Post-Make"],
+    postMake: ["External mould/yeast ripened"],
+    subMake: "Curd from a single day",
+    subPostMake: ["Other mould ripened"],
     appearance: "Rueda pequeña con corteza natural; pasta blanca-pálida, abierta.",
     flavour: "Suave, láctico, ligeramente herbáceo y limpio.",
     facts: [
-      "Solo se puede hacer en granjas de Gloucestershire con un rebaño de vacas de raza Gloucester.",
+      "Debe llevar, al menos en parte, leche de vacas de raza Old Gloucester.",
       "Tradicionalmente con leche parcialmente desnatada; más joven y ligero que el Double Gloucester.",
       "Era el queso que consumían los propios granjeros."
     ]
@@ -207,10 +229,12 @@ const CHEESES = [
     country: "Reino Unido (Inglaterra)",
     region: "Wensleydale, North Yorkshire",
     milk: "Vaca",
-    treatment: "Pasteurizada",
+    treatment: "Cruda o pasteurizada",
     status: "PGI (2013)",
     make: "Crumbly",
-    postMake: ["No Post-Make"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: ["Natural (cloth)"],
     appearance: "Pasta blanca, desmenuzable, húmeda.",
     flavour: "Fresco, láctico, ácido, a miel suave; 'flaky'.",
     facts: [
@@ -228,7 +252,9 @@ const CHEESES = [
     treatment: "Cruda (p. ej. Appleby's) o pasteurizada",
     status: "Sin protección",
     make: "Crumbly",
-    postMake: ["Wrapped / Coated"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Cilindro alto envuelto en tela; pasta desmenuzable, a menudo color melocotón (achiote).",
     flavour: "Salado, mineral, ácido, fresco.",
     facts: [
@@ -246,7 +272,9 @@ const CHEESES = [
     treatment: "Pasteurizada",
     status: "Sin protección",
     make: "Hard",
-    postMake: ["Wrapped / Coated"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Bloques rectangulares sin corteza (~20 kg), madurados en plástico/vacío.",
     flavour: "Láctico, dulce, ligeramente ácido; de suave (mild) a muy curado (extra mature).",
     facts: [
@@ -264,7 +292,9 @@ const CHEESES = [
     treatment: "A menudo cruda",
     status: "Puede ser West Country Farmhouse Cheddar PDO",
     make: "Hard",
-    postMake: ["Wrapped / Coated"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Rueda alta envuelta en tela con manteca; corteza natural con mohos; pasta amarilla.",
     flavour: "Complejo: caldo, nueces, terroso, afrutado, persistente.",
     facts: [
@@ -282,7 +312,9 @@ const CHEESES = [
     treatment: "Normalmente pasteurizada",
     status: "Sin protección",
     make: "Hard",
-    postMake: ["Flavoured / Smoked"],
+    postMake: ["Flavoured or Smoked", "Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: ["Smoked", "Artificial (plastic/wax coating)"],
     appearance: "Corteza/superficie marrón-dorada del humo; pasta amarilla.",
     flavour: "Ahumado, a madera, combinado con el sabor del cheddar.",
     facts: [
@@ -300,7 +332,9 @@ const CHEESES = [
     treatment: "Pasteurizada (obligatorio)",
     status: "PDO (1996)",
     make: "Crumbly",
-    postMake: ["Internal Mould (Blue)"],
+    postMake: ["Internal (blue) mould"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Cilindro alto con corteza natural rugosa; pasta crema con vetas azules radiales.",
     flavour: "Cremoso, mineral, salado, picante; textura mantecosa y desmenuzable.",
     facts: [
@@ -318,7 +352,9 @@ const CHEESES = [
     treatment: "Pasteurizada",
     status: "PDO / DOP (1996)",
     make: "Soft",
-    postMake: ["Internal Mould (Blue)"],
+    postMake: ["Internal (blue) mould"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Pasta blanca-paja con vetas verdeazuladas; envuelto en papel de aluminio.",
     flavour: "Dolce: cremoso, suave, dulce. Piccante: más firme, picante e intenso.",
     facts: [
@@ -336,7 +372,9 @@ const CHEESES = [
     treatment: "Cruda (obligatorio)",
     status: "PDO / AOP (primera AOC francesa, 1925)",
     make: "Soft",
-    postMake: ["Internal Mould (Blue)"],
+    postMake: ["Internal (blue) mould"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Cilindro sin corteza envuelto en papel de aluminio; pasta marfil muy veteada de azul-verde.",
     flavour: "Salado, intenso, picante, mantecoso, con notas dulces de leche de oveja.",
     facts: [
@@ -353,8 +391,10 @@ const CHEESES = [
     milk: "Vaca (Montbéliarde / Simmental francesa)",
     treatment: "Cruda",
     status: "PDO / AOP (AOC 2000)",
-    make: "Soft",
-    postMake: ["Washed Rind"],
+    make: "Hard",
+    postMake: ["Washed rind", "Wrapped, Rolled or Processed"],
+    subMake: "Cheeses which acidify in the mould",
+    subPostMake: ["Unflavoured wash solution", "Ash/charcoal"],
     appearance: "Rueda con corteza frotada beige-anaranjada; línea horizontal negra de ceniza vegetal en el centro.",
     flavour: "Suave, lácteo, afrutado, a nuez; aroma de corteza más fuerte que la pasta.",
     facts: [
@@ -372,7 +412,9 @@ const CHEESES = [
     treatment: "Cruda o pasteurizada",
     status: "PDO / DOP (DO 1984)",
     make: "Hard",
-    postMake: ["No Post-Make"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: ["Artificial (plastic/wax coating)"],
     appearance: "Corteza con dibujo de pleita (cestería de esparto) y la 'flor' en las caras; pasta marfil.",
     flavour: "Nuez, mantequilla, caramelo, ligeramente picante con la edad.",
     facts: [
@@ -387,10 +429,12 @@ const CHEESES = [
     country: "Italia",
     region: "Cerdeña",
     milk: "Oveja",
-    treatment: "Cruda o termizada/pasteurizada",
+    treatment: "Normalmente pasteurizada o termizada",
     status: "PDO / DOP (1996)",
     make: "Hard",
-    postMake: ["No Post-Make"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: ["Artificial (plastic/wax coating)"],
     appearance: "Corteza lisa de paja a marrón; pasta blanca a amarilla pálida.",
     flavour: "Dolce: suave, láctico. Maturo: más intenso, salado, a nuez.",
     facts: [
@@ -408,7 +452,9 @@ const CHEESES = [
     treatment: "Normalmente pasteurizada (Boerenkaas: cruda)",
     status: "Puede ser Gouda Holland PGI",
     make: "Hard",
-    postMake: ["Wrapped / Coated"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Rueda con recubrimiento de cera/plástico; pasta ámbar con cristales.",
     flavour: "Caramelo, toffee, butterscotch, nuez; crujiente por los cristales.",
     facts: [
@@ -426,13 +472,15 @@ const CHEESES = [
     treatment: "Normalmente pasteurizada",
     status: "Sin protección",
     make: "Hard",
-    postMake: ["Flavoured / Smoked"],
+    postMake: ["Flavoured or Smoked"],
+    subMake: null,
+    subPostMake: ["Insects (mites)"],
     appearance: "Bola tipo melón; corteza gris-marrón picada; pasta naranja intensa.",
     flavour: "A nuez, frutos secos, caramelo; más intenso con la edad.",
     facts: [
       "Color naranja por el achiote (annatto).",
       "Creado en tiempos de Luis XIV (Colbert) para sustituir al Edam holandés.",
-      "Los ácaros del queso (cirons) se alimentan de la corteza y le dan su aspecto picado."
+      "Su Post-Make se debe a los ácaros del queso (cirons, sub-Post-Make \"Insects\"): se alimentan de la corteza, le dan su aspecto picado y aportan sabor."
     ]
   },
   {
@@ -444,7 +492,9 @@ const CHEESES = [
     treatment: "Cruda (obligatorio)",
     status: "AOP suiza (2001) / PDO",
     make: "Hard Cooked",
-    postMake: ["Washed Rind"],
+    postMake: ["Washed rind"],
+    subMake: null,
+    subPostMake: [null],
     appearance: "Rueda grande (~35 kg); corteza marrón granulosa; pasta marfil sin apenas ojos.",
     flavour: "Afrutado, a nuez, caldo, ligeramente salado; puede tener cristales.",
     facts: [
@@ -462,7 +512,9 @@ const CHEESES = [
     treatment: "Cruda (obligatorio)",
     status: "PDO / DOP (1996)",
     make: "Hard Cooked",
-    postMake: ["No Post-Make"],
+    postMake: ["Wrapped, Rolled or Processed"],
+    subMake: "Grana",
+    subPostMake: ["Other wrapped"],
     appearance: "Rueda grande (~40 kg); corteza dorada con el nombre punteado; pasta granulosa (grana).",
     flavour: "Umami, caldo, frutos secos, piña, salado; cristales crujientes.",
     facts: [
