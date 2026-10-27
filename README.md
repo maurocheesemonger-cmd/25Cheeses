@@ -9,6 +9,7 @@ Una app web sencilla para estudiar los **25 quesos del Level 1 (Associate) de la
 - **Quiz**: preguntas tipo test que se generan al azar (10, 25 o 50). Puedes centrarte en una clase Make o en tus puntos débiles. Para aprobar se pide un 80%, como en el examen oficial.
 - **Tabla Make / Post-Make**: la matriz de clasificación con los 25 quesos.
 - **Progreso**: aciertos por queso, guardados en el navegador.
+- **Fotos**: si hay fotos en `photos/` (registradas en `photos.js`), salen en las fichas, en las tarjetas (modo "Foto: adivina el queso") y en el quiz ("¿Qué queso es el de la foto?").
 - **Idioma**: botón ES / EN arriba a la derecha para pasar toda la app (interfaz y fichas) a español o inglés.
 
 Funciona en el móvil, se puede añadir a la pantalla de inicio y, después de abrirla una vez, también sin conexión.

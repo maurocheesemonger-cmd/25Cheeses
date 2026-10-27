@@ -1,6 +1,6 @@
 // Caché sencilla para poder estudiar sin conexión.
-const CACHE = "25cheeses-v3";
-const FILES = ["./", "index.html", "styles.css", "data.js", "data-en.js", "app.js", "manifest.webmanifest", "icon.svg"];
+const CACHE = "25cheeses-v4";
+const FILES = ["./", "index.html", "styles.css", "data.js", "data-en.js", "photos.js", "app.js", "manifest.webmanifest", "icon.svg"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));

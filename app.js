@@ -13,7 +13,7 @@
       f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", rennet: "Cuajo", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen" },
       cards: {
         title: "Tarjetas", help: "Toca la tarjeta para darle la vuelta. Marca si te la sabes; las que no, vuelven a salir.",
-        all: "Todas (25)", pending: (n) => `Solo las que no sé (${n})`, reverse: "Al revés: adivina el queso",
+        all: "Todas (25)", pending: (n) => `Solo las que no sé (${n})`, reverse: "Al revés: adivina el queso", photo: "📷 Foto: adivina el queso",
         done: "🎉 ¡Te las sabes todas! Prueba el modo \"Todas\" o el quiz.", known: " · ✅ marcada como sabida",
         tap: "Toca para ver la ficha", which: "¿Qué queso es?", again: "🔁 Repasar", gotIt: "✅ Me la sé"
       },
@@ -37,6 +37,7 @@
           fact: (t) => `¿Qué queso es? “${t}”`,
           appearance: (t) => `¿Qué queso tiene este aspecto? “${t}”`,
           flavour: (t) => `¿Qué queso sabe así? “${t}”`,
+          photo: () => "¿Qué queso es el de la foto?",
           whichMake: (m) => `¿Cuál de estos quesos tiene Make = ${m}?`,
           whichMilk: (s) => `¿Cuál de estos quesos es de leche de ${s.toLowerCase()}?`,
           whichPost: (p) => `¿Cuál de estos quesos tiene Post-Make “${p}”?`
@@ -62,7 +63,7 @@
       f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", rennet: "Rennet", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts" },
       cards: {
         title: "Flashcards", help: "Tap the card to flip it. Mark whether you know it; the ones you don't will come back.",
-        all: "All (25)", pending: (n) => `Only the ones I don't know (${n})`, reverse: "Reverse: guess the cheese",
+        all: "All (25)", pending: (n) => `Only the ones I don't know (${n})`, reverse: "Reverse: guess the cheese", photo: "📷 Photo: guess the cheese",
         done: "🎉 You know them all! Try \"All\" mode or the quiz.", known: " · ✅ marked as known",
         tap: "Tap to see the profile", which: "Which cheese is it?", again: "🔁 Review again", gotIt: "✅ I know it"
       },
@@ -86,6 +87,7 @@
           fact: (t) => `Which cheese is it? “${t}”`,
           appearance: (t) => `Which cheese looks like this? “${t}”`,
           flavour: (t) => `Which cheese tastes like this? “${t}”`,
+          photo: () => "Which cheese is in the photo?",
           whichMake: (m) => `Which of these cheeses has Make = ${m}?`,
           whichMilk: (s) => `Which of these cheeses is made from ${s.toLowerCase()}'s milk?`,
           whichPost: (p) => `Which of these cheeses has Post-Make “${p}”?`
@@ -134,6 +136,9 @@
   const byId = Object.fromEntries(CHEESES.map((c) => [c.id, c]));
   const makeClass = (m) => "make-" + m.replace(/\s/g, "");
   // Clase con su sub-clase entre paréntesis, si la hay
+  // Foto del queso (si se ha extraído); alt vacío para no desvelar el nombre en el quiz
+  const photoSrc = (id) => (PHOTOS[id] ? "photos/" + PHOTOS[id] : null);
+  const photoImg = (id, cls, alt = "") => (photoSrc(id) ? `<img class="${cls}" src="${photoSrc(id)}" alt="${esc(alt)}"${cls === "thumb" ? ' loading="lazy"' : ""}>` : "");
   const withSub = (cls, subCls) => (subCls ? `${cls} (${subCls})` : cls);
   const postList = (c) => c.postMake.map((p, i) => withSub(p, c.subPostMake[i])).join(" + ");
   const classTags = (c, prefix = "") =>
@@ -215,9 +220,10 @@
         (!q || [c.name, c.country, c.region, c.milk, c.make, c.subMake, ...c.postMake, ...c.subPostMake].join(" ").toLowerCase().includes(q)));
       grid.replaceChildren($(list.map((c) => `
         <button class="card" data-id="${c.id}">
+          ${photoImg(c.id, "thumb")}
           <div class="name">${esc(c.name)}</div>
           <div class="meta">${esc(countryLabel(countryKey(byId[c.id])))} · ${esc(speciesLabel(speciesKey(byId[c.id])))}</div>
-          <span class="tag ${makeClass(c.make)}">${c.make}</span>${c.postMake.map((p) => `<span class="tag">${p}</span>`).join("")}
+          <div><span class="tag ${makeClass(c.make)}">${c.make}</span>${c.postMake.map((p) => `<span class="tag">${p}</span>`).join("")}</div>
         </button>`).join("") || `<p class="muted">${t.none}</p>`));
     };
     view.querySelector(".search").addEventListener("input", (e) => { libFilter.q = e.target.value; draw(); });
@@ -238,6 +244,7 @@
   function detailHTML(c) {
     const f = T().f;
     return `
+      ${photoImg(c.id, "photo", c.name)}
       <h2>${esc(c.name)}</h2>
       ${classTags(c, true)}
       <dl>
@@ -281,6 +288,7 @@
         <button class="chip" data-mode="all">${t.all}</button>
         <button class="chip" data-mode="pending">${t.pending(CHEESES.filter((c) => !progress.known[c.id]).length)}</button>
         <button class="chip" data-mode="reverse">${t.reverse}</button>
+        ${Object.keys(PHOTOS).length ? `<button class="chip" data-mode="photo">${t.photo}</button>` : ""}
       </div>
       <div id="deck"></div>`));
     view.querySelector(".chips").addEventListener("click", (e) => {
@@ -296,7 +304,7 @@
   }
 
   function startDeck(mode) {
-    const list = mode === "pending" ? CHEESES.filter((c) => !progress.known[c.id]) : CHEESES;
+    const list = mode === "pending" ? CHEESES.filter((c) => !progress.known[c.id]) : mode === "photo" ? CHEESES.filter((c) => PHOTOS[c.id]) : CHEESES;
     deck = { mode, ids: shuffle(list.map((c) => c.id)) };
     deckPos = 0;
     markDeckChip();
@@ -314,14 +322,17 @@
     const raw = byId[deck.ids[deckPos]];
     const c = L(raw);
     const reverse = deck.mode === "reverse";
-    const front = reverse
+    const photoMode = deck.mode === "photo";
+    const front = photoMode
+      ? `${photoImg(c.id, "photo")}<p class="muted small" style="font-weight:400">${t.which}</p>`
+      : reverse
       ? `<div style="font-size:1rem;font-weight:500;text-align:left">
            <p><b>${esc(countryLabel(countryKey(raw)))}</b> · ${esc(speciesLabel(speciesKey(raw)))} · ${esc(withSub(c.make, c.subMake))} · ${esc(postList(c))}</p>
            <p>${esc(mask(c.appearance, c))}</p><p class="muted">${esc(mask(c.flavour, c))}</p>
            <p class="muted small">${t.which}</p></div>`
       : `<div>${esc(c.name)}</div><div class="muted small" style="font-weight:400;margin-top:8px">${t.tap}</div>`;
-    const back = reverse ? `<h3 style="margin-top:0">${esc(c.name)}</h3>${factsList(c)}`
-      : `<p><b>${esc(c.country)}</b> — ${esc(c.region)}</p>
+    const back = reverse || photoMode ? `<h3 style="margin-top:0">${esc(c.name)}</h3>${factsList(c)}`
+      : `${photoImg(c.id, "photo", c.name)}<p><b>${esc(c.country)}</b> — ${esc(c.region)}</p>
          <p>🥛 ${esc(c.milk)} · ${esc(c.treatment)}</p>
          <p>🏷️ ${esc(c.status)}</p>
          <p>${classTags(c, true)}</p>
@@ -402,6 +413,7 @@
     (c) => ({ type: "fact", kind: "cheese", fact: Math.floor(Math.random() * c.facts.length), options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "appearance", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "flavour", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
+    (c) => PHOTOS[c.id] && ({ type: "photo", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "whichMake", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => x.make !== c.make)), answer: c.id }),
     (c) => ({ type: "whichMilk", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => speciesKey(x) !== speciesKey(c))), answer: c.id }),
     (c) => {
@@ -418,6 +430,7 @@
       case "fact": return t.fact(mask(c.facts[q.fact], c));
       case "appearance": return t.appearance(mask(c.appearance, c));
       case "flavour": return t.flavour(mask(c.flavour, c));
+      case "photo": return t.photo();
       case "whichMake": return t.whichMake(c.make);
       case "whichMilk": return t.whichMilk(speciesLabel(speciesKey(q.cheese)));
       case "whichPost": return t.whichPost(q.pm);
@@ -489,6 +502,7 @@
       <p class="muted small">${t.progress(i + 1, questions.length, quiz.score)}</p>
       <div class="bar"><i style="width:${(i / questions.length) * 100}%"></i></div>
       <div class="question">${esc(questionText(q))}</div>
+      ${q.type === "photo" ? photoImg(q.cheese.id, "photo quiz-photo") : ""}
       <div class="options">${q.options.map((o, k) => `<button class="option" data-k="${k}">${esc(show(o))}</button>`).join("")}</div>
       <div id="after"></div>`));
     view.querySelectorAll(".option").forEach((b) => (b.onclick = () => answer(+b.dataset.k)));
