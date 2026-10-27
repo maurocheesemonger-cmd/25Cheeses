@@ -137,8 +137,11 @@
   const makeClass = (m) => "make-" + m.replace(/\s/g, "");
   // Clase con su sub-clase entre paréntesis, si la hay
   // Foto del queso (si se ha extraído); alt vacío para no desvelar el nombre en el quiz
-  const photoSrc = (id) => (PHOTOS[id] ? "photos/" + PHOTOS[id] : null);
-  const photoImg = (id, cls, alt = "") => (photoSrc(id) ? `<img class="${cls}" src="${photoSrc(id)}" alt="${esc(alt)}"${cls === "thumb" ? ' loading="lazy"' : ""}>` : "");
+  // PHOTOS[id] = [pieza entera, corte]; i elige cuál
+  const photoSrc = (id, i = 0) => (PHOTOS[id] ? "photos/" + PHOTOS[id][i % PHOTOS[id].length] : null);
+  const photoImg = (id, cls, alt = "", i = 0) => (photoSrc(id) ? `<img class="${cls}" src="${photoSrc(id, i)}" alt="${esc(alt)}"${cls === "thumb" ? ' loading="lazy"' : ""}>` : "");
+  const randomPhoto = (id) => Math.floor(Math.random() * (PHOTOS[id] || [0]).length);
+  const allPhotos = (id, alt) => (PHOTOS[id] ? `<div class="photos">${PHOTOS[id].map((_, i) => photoImg(id, "photo", alt, i)).join("")}</div>` : "");
   const withSub = (cls, subCls) => (subCls ? `${cls} (${subCls})` : cls);
   const postList = (c) => c.postMake.map((p, i) => withSub(p, c.subPostMake[i])).join(" + ");
   const classTags = (c, prefix = "") =>
@@ -244,7 +247,7 @@
   function detailHTML(c) {
     const f = T().f;
     return `
-      ${photoImg(c.id, "photo", c.name)}
+      ${allPhotos(c.id, c.name)}
       <h2>${esc(c.name)}</h2>
       ${classTags(c, true)}
       <dl>
@@ -324,7 +327,7 @@
     const reverse = deck.mode === "reverse";
     const photoMode = deck.mode === "photo";
     const front = photoMode
-      ? `${photoImg(c.id, "photo")}<p class="muted small" style="font-weight:400">${t.which}</p>`
+      ? `${photoImg(c.id, "photo", "", randomPhoto(c.id))}<p class="muted small" style="font-weight:400">${t.which}</p>`
       : reverse
       ? `<div style="font-size:1rem;font-weight:500;text-align:left">
            <p><b>${esc(countryLabel(countryKey(raw)))}</b> · ${esc(speciesLabel(speciesKey(raw)))} · ${esc(withSub(c.make, c.subMake))} · ${esc(postList(c))}</p>
@@ -332,7 +335,7 @@
            <p class="muted small">${t.which}</p></div>`
       : `<div>${esc(c.name)}</div><div class="muted small" style="font-weight:400;margin-top:8px">${t.tap}</div>`;
     const back = reverse || photoMode ? `<h3 style="margin-top:0">${esc(c.name)}</h3>${factsList(c)}`
-      : `${photoImg(c.id, "photo", c.name)}<p><b>${esc(c.country)}</b> — ${esc(c.region)}</p>
+      : `${allPhotos(c.id, c.name)}<p><b>${esc(c.country)}</b> — ${esc(c.region)}</p>
          <p>🥛 ${esc(c.milk)} · ${esc(c.treatment)}</p>
          <p>🏷️ ${esc(c.status)}</p>
          <p>${classTags(c, true)}</p>
@@ -413,7 +416,7 @@
     (c) => ({ type: "fact", kind: "cheese", fact: Math.floor(Math.random() * c.facts.length), options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "appearance", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "flavour", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
-    (c) => PHOTOS[c.id] && ({ type: "photo", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
+    (c) => PHOTOS[c.id] && ({ type: "photo", kind: "cheese", pi: randomPhoto(c.id), options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
     (c) => ({ type: "whichMake", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => x.make !== c.make)), answer: c.id }),
     (c) => ({ type: "whichMilk", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => speciesKey(x) !== speciesKey(c))), answer: c.id }),
     (c) => {
@@ -502,7 +505,7 @@
       <p class="muted small">${t.progress(i + 1, questions.length, quiz.score)}</p>
       <div class="bar"><i style="width:${(i / questions.length) * 100}%"></i></div>
       <div class="question">${esc(questionText(q))}</div>
-      ${q.type === "photo" ? photoImg(q.cheese.id, "photo quiz-photo") : ""}
+      ${q.type === "photo" ? photoImg(q.cheese.id, "photo quiz-photo", "", q.pi) : ""}
       <div class="options">${q.options.map((o, k) => `<button class="option" data-k="${k}">${esc(show(o))}</button>`).join("")}</div>
       <div id="after"></div>`));
     view.querySelectorAll(".option").forEach((b) => (b.onclick = () => answer(+b.dataset.k)));

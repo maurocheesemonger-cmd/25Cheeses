@@ -112,6 +112,8 @@ h3 { margin: 18px 0 6px; font-size: 1rem; }
 .card .name { font-weight: 650; }
 .card .thumb { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; margin-bottom: 8px; background: var(--surface-2); }
 img.photo { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 260px; object-fit: contain; border-radius: 12px; margin: 0 auto 12px; background: var(--surface-2); }
+.photos { display: flex; gap: 8px; margin-bottom: 12px; }
+.photos img.photo { flex: 1; min-width: 0; margin: 0; }
 .face img.photo { max-height: 200px; }
 .quiz-photo { max-height: 240px; }
 .card .meta { color: var(--muted); font-size: .85rem; }
