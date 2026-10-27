@@ -1,6 +1,114 @@
 (() => {
   const view = document.getElementById("view");
   const STORE_KEY = "25cheeses-progress-v1";
+  const LANG_KEY = "25cheeses-lang";
+
+  // ---------- Textos de la interfaz (ES / EN) ----------
+  const UI = {
+    es: {
+      title: "25 Cheeses · Level 1",
+      tabs: { library: "Fichas", cards: "Tarjetas", quiz: "Quiz", matrix: "Tabla", progress: "Progreso" },
+      switchTo: "EN", switchLabel: "Switch to English",
+      lib: { title: "Los 25 quesos", search: "Buscar por nombre, país, leche…", all: "Todos", none: "Sin resultados.", back: "← Volver a las fichas", prev: "← Anterior", next: "Siguiente →" },
+      f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen" },
+      cards: {
+        title: "Tarjetas", help: "Toca la tarjeta para darle la vuelta. Marca si te la sabes; las que no, vuelven a salir.",
+        all: "Todas (25)", pending: (n) => `Solo las que no sé (${n})`, reverse: "Al revés: adivina el queso",
+        done: "🎉 ¡Te las sabes todas! Prueba el modo \"Todas\" o el quiz.", known: " · ✅ marcada como sabida",
+        tap: "Toca para ver la ficha", which: "¿Qué queso es?", again: "🔁 Repasar", gotIt: "✅ Me la sé"
+      },
+      quiz: {
+        title: "Quiz", intro: "Preguntas tipo test generadas a partir de las fichas: leche, país, región, protección, Make, Post-Make, aspecto y sabor.",
+        best: (s, t) => `Mejor resultado: ${s}/${t}`, count: "Número de preguntas", focus: "Enfoque",
+        allCheeses: "Todos los quesos", weak: "Mis puntos débiles", start: "Empezar",
+        progress: (i, n, s) => `Pregunta ${i} de ${n} · Aciertos: ${s}`,
+        correct: "✅ ¡Correcto!", wrong: "❌ La respuesta era:", next: "Siguiente →", result: "Ver resultado",
+        resultTitle: "Resultado", pass: "🏆 ¡Aprobado! (el examen oficial pide un 80%)", fail: "Sigue practicando: el examen oficial pide un 80%.",
+        review: "Repasa estas", again: "Otro quiz",
+        q: {
+          milk: (n) => `¿De qué leche se elabora ${n}?`,
+          country: (n) => `¿De qué país es ${n}?`,
+          make: (n) => `¿Cuál es la clase Make de ${n}?`,
+          postMake: (n) => `¿Qué clase Post-Make corresponde a ${n}?`,
+          status: (n) => `¿Qué tipo de protección tiene ${n}?`,
+          region: (n) => `¿De qué región procede ${n}?`,
+          fact: (t) => `¿Qué queso es? “${t}”`,
+          appearance: (t) => `¿Qué queso tiene este aspecto? “${t}”`,
+          flavour: (t) => `¿Qué queso sabe así? “${t}”`,
+          whichMake: (m) => `¿Cuál de estos quesos tiene Make = ${m}?`,
+          whichMilk: (s) => `¿Cuál de estos quesos es de leche de ${s.toLowerCase()}?`,
+          whichPost: (p) => `¿Cuál de estos quesos tiene Post-Make “${p}”?`
+        }
+      },
+      species: { cow: "Vaca", sheep: "Oveja", goat: "Cabra", buffalo: "Búfala", sheepGoat: "Oveja (y algo de cabra)" },
+      statusKeys: { PDO: "PDO", PGI: "PGI", none: "Sin denominación protegida propia" },
+      matrix: {
+        title: "Tabla Make / Post-Make", help: "Cada queso tiene una sola clase Make y puede tener una o más Post-Make. Toca un queso para ver su ficha.",
+        corner: "Make ↓ / Post-Make →", makes: "Clases Make", posts: "Clases Post-Make",
+        note: "⚠️ La clasificación Post-Make de algunos quesos (p. ej. Block Cheddar, Aged Gouda, Feta, Gruyère, Mimolette) es una interpretación; contrástala con las crib sheets oficiales de la Academy of Cheese."
+      },
+      prog: {
+        title: "Tu progreso", known: "Tarjetas que te sabes:", answered: "Preguntas respondidas:", global: "Acierto global:",
+        per: "Por queso (de peor a mejor)", reset: "Borrar progreso", confirm: "¿Seguro que quieres borrar todo tu progreso?"
+      }
+    },
+    en: {
+      title: "25 Cheeses · Level 1",
+      tabs: { library: "Profiles", cards: "Cards", quiz: "Quiz", matrix: "Matrix", progress: "Progress" },
+      switchTo: "ES", switchLabel: "Cambiar a español",
+      lib: { title: "The 25 cheeses", search: "Search by name, country, milk…", all: "All", none: "No results.", back: "← Back to profiles", prev: "← Previous", next: "Next →" },
+      f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts" },
+      cards: {
+        title: "Flashcards", help: "Tap the card to flip it. Mark whether you know it; the ones you don't will come back.",
+        all: "All (25)", pending: (n) => `Only the ones I don't know (${n})`, reverse: "Reverse: guess the cheese",
+        done: "🎉 You know them all! Try \"All\" mode or the quiz.", known: " · ✅ marked as known",
+        tap: "Tap to see the profile", which: "Which cheese is it?", again: "🔁 Review again", gotIt: "✅ I know it"
+      },
+      quiz: {
+        title: "Quiz", intro: "Multiple-choice questions generated from the profiles: milk, country, region, protection, Make, Post-Make, appearance and flavour.",
+        best: (s, t) => `Best score: ${s}/${t}`, count: "Number of questions", focus: "Focus",
+        allCheeses: "All cheeses", weak: "My weak spots", start: "Start",
+        progress: (i, n, s) => `Question ${i} of ${n} · Correct: ${s}`,
+        correct: "✅ Correct!", wrong: "❌ The answer was:", next: "Next →", result: "See result",
+        resultTitle: "Result", pass: "🏆 Pass! (the official exam requires 80%)", fail: "Keep practising: the official exam requires 80%.",
+        review: "Review these", again: "Another quiz",
+        q: {
+          milk: (n) => `Which milk is ${n} made from?`,
+          country: (n) => `Which country is ${n} from?`,
+          make: (n) => `What is the Make class of ${n}?`,
+          postMake: (n) => `Which Post-Make class applies to ${n}?`,
+          status: (n) => `What type of protection does ${n} have?`,
+          region: (n) => `Which region does ${n} come from?`,
+          fact: (t) => `Which cheese is it? “${t}”`,
+          appearance: (t) => `Which cheese looks like this? “${t}”`,
+          flavour: (t) => `Which cheese tastes like this? “${t}”`,
+          whichMake: (m) => `Which of these cheeses has Make = ${m}?`,
+          whichMilk: (s) => `Which of these cheeses is made from ${s.toLowerCase()}'s milk?`,
+          whichPost: (p) => `Which of these cheeses has Post-Make “${p}”?`
+        }
+      },
+      species: { cow: "Cow", sheep: "Sheep", goat: "Goat", buffalo: "Buffalo", sheepGoat: "Sheep (with some goat)" },
+      statusKeys: { PDO: "PDO", PGI: "PGI", none: "No protected designation of its own" },
+      matrix: {
+        title: "Make / Post-Make matrix", help: "Each cheese has a single Make class and may have one or more Post-Make classes. Tap a cheese to see its profile.",
+        corner: "Make ↓ / Post-Make →", makes: "Make classes", posts: "Post-Make classes",
+        note: "⚠️ The Post-Make classification of some cheeses (e.g. Block Cheddar, Aged Gouda, Feta, Gruyère, Mimolette) is an interpretation; check it against the official Academy of Cheese crib sheets."
+      },
+      prog: {
+        title: "Your progress", known: "Cards you know:", answered: "Questions answered:", global: "Overall accuracy:",
+        per: "By cheese (worst to best)", reset: "Reset progress", confirm: "Are you sure you want to delete all your progress?"
+      }
+    }
+  };
+
+  let lang = (() => { try { return localStorage.getItem(LANG_KEY) || "es"; } catch { return "es"; } })();
+  if (!UI[lang]) lang = "es";
+  const T = () => UI[lang];
+
+  // Queso con los textos en el idioma actual
+  const L = (c) => (lang === "en" ? { ...c, ...CHEESES_EN[c.id] } : c);
+  const makeDesc = () => (lang === "en" ? MAKE_CLASSES_EN : MAKE_CLASSES);
+  const postDesc = () => (lang === "en" ? POST_MAKE_CLASSES_EN : POST_MAKE_CLASSES);
 
   // ---------- Utilidades ----------
   const $ = (html) => {
@@ -18,13 +126,17 @@
     return a;
   };
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const distinct = (arr) => [...new Set(arr)];
   const byId = Object.fromEntries(CHEESES.map((c) => [c.id, c]));
   const makeClass = (m) => "make-" + m.replace(/\s/g, "");
 
-  // Valores normalizados para el quiz
-  const species = (c) => (c.id === "feta" ? "Oveja (y algo de cabra)" : c.milk.split(/[ ,(]/)[0]);
-  const country = (c) => c.country.split(" (")[0];
-  const statusKey = (c) => (/^PGI/.test(c.status) ? "PGI" : /^(PDO|AOP)/.test(c.status) ? "PDO" : "Sin denominación protegida propia");
+  // Claves neutras (independientes del idioma) para el quiz
+  const SPECIES_KEY = { Vaca: "cow", Oveja: "sheep", Cabra: "goat", "Búfala": "buffalo" };
+  const speciesKey = (c) => (c.id === "feta" ? "sheepGoat" : SPECIES_KEY[c.milk.split(/[ ,(]/)[0]]);
+  const speciesLabel = (k) => T().species[k];
+  const countryKey = (c) => c.country.split(" (")[0];
+  const countryLabel = (k) => L(CHEESES.find((c) => countryKey(c) === k)).country.split(" (")[0];
+  const statusKey = (c) => (/^PGI/.test(c.status) ? "PGI" : /^(PDO|AOP)/.test(c.status) ? "PDO" : "none");
 
   // ---------- Progreso (localStorage) ----------
   const load = () => {
@@ -45,10 +157,14 @@
     return (s.ko + 1) / (s.ok + s.ko + 2); // suavizado: sin datos = 0.5
   };
 
-  // ---------- Navegación ----------
+  // ---------- Navegación e idioma ----------
   const tabs = document.querySelectorAll(".tabs button");
+  const langBtn = document.getElementById("lang");
   const routes = { library: renderLibrary, cards: renderCards, quiz: renderQuizStart, matrix: renderMatrix, progress: renderProgress };
+  let current = { tab: "library", arg: undefined };
+
   function go(tab, arg) {
+    current = { tab, arg };
     tabs.forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
     view.replaceChildren();
     routes[tab](arg);
@@ -56,26 +172,43 @@
   }
   tabs.forEach((b) => b.addEventListener("click", () => go(b.dataset.tab)));
 
+  function applyLang() {
+    document.documentElement.lang = lang;
+    document.querySelector(".tabs").ariaLabel = lang === "en" ? "Sections" : "Secciones";
+    tabs.forEach((b) => (b.querySelector("em").textContent = T().tabs[b.dataset.tab]));
+    langBtn.textContent = T().switchTo;
+    langBtn.title = langBtn.ariaLabel = T().switchLabel;
+  }
+  langBtn.addEventListener("click", () => {
+    lang = lang === "es" ? "en" : "es";
+    try { localStorage.setItem(LANG_KEY, lang); } catch {}
+    applyLang();
+    // Redibuja la pantalla actual sin perder el sitio (tarjeta o pregunta en curso)
+    view.replaceChildren();
+    routes[current.tab](current.arg);
+  });
+
   // ---------- Fichas ----------
-  let libFilter = { q: "", make: "Todos" };
+  let libFilter = { q: "", make: "all" };
   function renderLibrary() {
+    const t = T().lib;
     view.append($(`
-      <h2>Los 25 quesos</h2>
-      <input class="search" type="search" placeholder="Buscar por nombre, país, leche…" value="${esc(libFilter.q)}">
-      <div class="chips">${["Todos", ...Object.keys(MAKE_CLASSES)].map((m) => `<button class="chip ${m === libFilter.make ? "on" : ""}" data-m="${m}">${m}</button>`).join("")}</div>
+      <h2>${t.title}</h2>
+      <input class="search" type="search" placeholder="${t.search}" value="${esc(libFilter.q)}">
+      <div class="chips">${["all", ...Object.keys(MAKE_CLASSES)].map((m) => `<button class="chip ${m === libFilter.make ? "on" : ""}" data-m="${m}">${m === "all" ? t.all : m}</button>`).join("")}</div>
       <div class="grid"></div>`));
     const grid = view.querySelector(".grid");
     const draw = () => {
       const q = libFilter.q.toLowerCase();
-      const list = CHEESES.filter((c) =>
-        (libFilter.make === "Todos" || c.make === libFilter.make) &&
+      const list = CHEESES.map(L).filter((c) =>
+        (libFilter.make === "all" || c.make === libFilter.make) &&
         (!q || [c.name, c.country, c.region, c.milk, c.make, ...c.postMake].join(" ").toLowerCase().includes(q)));
       grid.replaceChildren($(list.map((c) => `
         <button class="card" data-id="${c.id}">
           <div class="name">${esc(c.name)}</div>
-          <div class="meta">${esc(country(c))} · ${esc(species(c))}</div>
+          <div class="meta">${esc(countryLabel(countryKey(byId[c.id])))} · ${esc(speciesLabel(speciesKey(byId[c.id])))}</div>
           <span class="tag ${makeClass(c.make)}">${c.make}</span>${c.postMake.map((p) => `<span class="tag">${p}</span>`).join("")}
-        </button>`).join("") || `<p class="muted">Sin resultados.</p>`));
+        </button>`).join("") || `<p class="muted">${t.none}</p>`));
     };
     view.querySelector(".search").addEventListener("input", (e) => { libFilter.q = e.target.value; draw(); });
     view.querySelector(".chips").addEventListener("click", (e) => {
@@ -88,33 +221,39 @@
     draw();
   }
 
+  function factsList(c) {
+    return `<ul>${c.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>`;
+  }
+
   function detailHTML(c) {
+    const f = T().f;
     return `
       <h2>${esc(c.name)}</h2>
       <span class="tag ${makeClass(c.make)}">Make: ${c.make}</span>${c.postMake.map((p) => `<span class="tag">Post-Make: ${p}</span>`).join("")}
       <dl>
-        <dt>País</dt><dd>${esc(c.country)}</dd>
-        <dt>Región</dt><dd>${esc(c.region)}</dd>
-        <dt>Leche</dt><dd>${esc(c.milk)}</dd>
-        <dt>Tratamiento</dt><dd>${esc(c.treatment)}</dd>
-        <dt>Protección</dt><dd>${esc(c.status)}</dd>
-        <dt>Aspecto</dt><dd>${esc(c.appearance)}</dd>
-        <dt>Sabor / textura</dt><dd>${esc(c.flavour)}</dd>
+        <dt>${f.country}</dt><dd>${esc(c.country)}</dd>
+        <dt>${f.region}</dt><dd>${esc(c.region)}</dd>
+        <dt>${f.milk}</dt><dd>${esc(c.milk)}</dd>
+        <dt>${f.treatment}</dt><dd>${esc(c.treatment)}</dd>
+        <dt>${f.status}</dt><dd>${esc(c.status)}</dd>
+        <dt>${f.appearance}</dt><dd>${esc(c.appearance)}</dd>
+        <dt>${f.flavour}</dt><dd>${esc(c.flavour)}</dd>
       </dl>
-      <h3>Claves para el examen</h3>
-      <ul>${c.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>`;
+      <h3>${f.keys}</h3>
+      ${factsList(c)}`;
   }
 
   routes["library-detail"] = (id) => {
     tabs.forEach((b) => b.classList.toggle("active", b.dataset.tab === "library"));
-    const c = byId[id];
-    const i = CHEESES.indexOf(c);
+    const t = T().lib;
+    const c = L(byId[id]);
+    const i = CHEESES.indexOf(byId[id]);
     view.append($(`
-      <button class="back-link">← Volver a las fichas</button>
+      <button class="back-link">${t.back}</button>
       <article class="detail">${detailHTML(c)}</article>
       <div class="row" style="margin-top:12px;justify-content:space-between">
-        <button class="btn" data-go="${CHEESES[(i + 24) % 25].id}">← Anterior</button>
-        <button class="btn" data-go="${CHEESES[(i + 1) % 25].id}">Siguiente →</button>
+        <button class="btn" data-go="${CHEESES[(i + 24) % 25].id}">${t.prev}</button>
+        <button class="btn" data-go="${CHEESES[(i + 1) % 25].id}">${t.next}</button>
       </div>`));
     view.querySelector(".back-link").onclick = () => go("library");
     view.querySelectorAll("[data-go]").forEach((b) => (b.onclick = () => go("library-detail", b.dataset.go)));
@@ -123,61 +262,69 @@
   // ---------- Tarjetas ----------
   let deck = null, deckPos = 0;
   function renderCards() {
+    const t = T().cards;
     view.append($(`
-      <h2>Tarjetas</h2>
-      <p class="muted small">Toca la tarjeta para darle la vuelta. Marca si te la sabes; las que no, vuelven a salir.</p>
+      <h2>${t.title}</h2>
+      <p class="muted small">${t.help}</p>
       <div class="chips">
-        <button class="chip" data-mode="all">Todas (25)</button>
-        <button class="chip" data-mode="pending">Solo las que no sé (${CHEESES.filter((c) => !progress.known[c.id]).length})</button>
-        <button class="chip" data-mode="reverse">Al revés: adivina el queso</button>
+        <button class="chip" data-mode="all">${t.all}</button>
+        <button class="chip" data-mode="pending">${t.pending(CHEESES.filter((c) => !progress.known[c.id]).length)}</button>
+        <button class="chip" data-mode="reverse">${t.reverse}</button>
       </div>
       <div id="deck"></div>`));
     view.querySelector(".chips").addEventListener("click", (e) => {
       const mode = e.target.dataset.mode; if (!mode) return;
-      view.querySelectorAll(".chip").forEach((x) => x.classList.toggle("on", x === e.target));
       startDeck(mode);
     });
-    view.querySelector('[data-mode="all"]').click();
+    // Al cambiar de idioma se mantiene el mazo en curso
+    if (deck) { markDeckChip(); drawCard(); } else startDeck("all");
+  }
+
+  function markDeckChip() {
+    view.querySelectorAll("[data-mode]").forEach((x) => x.classList.toggle("on", x.dataset.mode === deck.mode));
   }
 
   function startDeck(mode) {
-    let list = mode === "pending" ? CHEESES.filter((c) => !progress.known[c.id]) : CHEESES;
+    const list = mode === "pending" ? CHEESES.filter((c) => !progress.known[c.id]) : CHEESES;
     deck = { mode, ids: shuffle(list.map((c) => c.id)) };
     deckPos = 0;
+    markDeckChip();
     drawCard();
   }
 
   function drawCard() {
+    const t = T().cards;
     const box = document.getElementById("deck");
     if (!deck.ids.length) {
-      box.replaceChildren($(`<p>🎉 ¡Te las sabes todas! Prueba el modo "Todas" o el quiz.</p>`));
+      box.replaceChildren($(`<p>${t.done}</p>`));
       return;
     }
     if (deckPos >= deck.ids.length) { deck.ids = shuffle(deck.ids); deckPos = 0; }
-    const c = byId[deck.ids[deckPos]];
+    const raw = byId[deck.ids[deckPos]];
+    const c = L(raw);
     const reverse = deck.mode === "reverse";
     const front = reverse
       ? `<div style="font-size:1rem;font-weight:500;text-align:left">
-           <p><b>${esc(country(c))}</b> · ${esc(species(c))} · ${c.make} · ${c.postMake.join(", ")}</p>
+           <p><b>${esc(countryLabel(countryKey(raw)))}</b> · ${esc(speciesLabel(speciesKey(raw)))} · ${c.make} · ${c.postMake.join(", ")}</p>
            <p>${esc(mask(c.appearance, c))}</p><p class="muted">${esc(mask(c.flavour, c))}</p>
-           <p class="muted small">¿Qué queso es?</p></div>`
-      : `<div>${esc(c.name)}</div><div class="muted small" style="font-weight:400;margin-top:8px">Toca para ver la ficha</div>`;
-    const back = reverse ? `<h3 style="margin-top:0">${esc(c.name)}</h3><ul>${c.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>`
+           <p class="muted small">${t.which}</p></div>`
+      : `<div>${esc(c.name)}</div><div class="muted small" style="font-weight:400;margin-top:8px">${t.tap}</div>`;
+    const back = reverse ? `<h3 style="margin-top:0">${esc(c.name)}</h3>${factsList(c)}`
       : `<p><b>${esc(c.country)}</b> — ${esc(c.region)}</p>
          <p>🥛 ${esc(c.milk)} · ${esc(c.treatment)}</p>
          <p>🏷️ ${esc(c.status)}</p>
          <p><span class="tag ${makeClass(c.make)}">Make: ${c.make}</span>${c.postMake.map((p) => `<span class="tag">${p}</span>`).join("")}</p>
          <p>👀 ${esc(c.appearance)}</p><p>👅 ${esc(c.flavour)}</p>
-         <ul>${c.facts.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>`;
+         ${factsList(c)}`;
     box.replaceChildren($(`
-      <p class="muted small">${deckPos + 1} / ${deck.ids.length}${progress.known[c.id] ? " · ✅ marcada como sabida" : ""}</p>
+      <p class="muted small">${deckPos + 1} / ${deck.ids.length}${progress.known[c.id] ? t.known : ""}</p>
       <div class="flash"><div class="flash-inner">
         <div class="face front">${front}</div>
         <div class="face back">${back}</div>
       </div></div>
       <div class="row" style="justify-content:center">
-        <button class="btn" data-a="no">🔁 Repasar</button>
-        <button class="btn primary" data-a="yes">✅ Me la sé</button>
+        <button class="btn" data-a="no">${t.again}</button>
+        <button class="btn primary" data-a="yes">${t.gotIt}</button>
       </div>`));
     const flash = box.querySelector(".flash");
     flash.onclick = () => flash.classList.toggle("flipped");
@@ -200,51 +347,85 @@
   }
 
   // ---------- Quiz ----------
-  // Cada generador devuelve { q, options, answer, cheese, explain } o null
-  const distinct = (arr) => [...new Set(arr)];
+  // Cada pregunta guarda claves neutras (no textos), así se puede
+  // redibujar en el otro idioma a mitad de quiz.
   function optionsFrom(correct, pool, n = 4) {
     return shuffle([correct, ...shuffle(distinct(pool).filter((x) => x !== correct)).slice(0, n - 1)]);
   }
-  const otherNames = (c, filter = () => true) => CHEESES.filter((x) => x !== c && filter(x)).map((x) => x.name);
+  const otherIds = (c, filter = () => true) => CHEESES.filter((x) => x !== c && filter(x)).map((x) => x.id);
+  const nameOf = (id) => byId[id].name;
+  const POST_KEYS = Object.keys(POST_MAKE_CLASSES);
+
+  // kind → cómo se muestran las opciones
+  const label = {
+    species: speciesLabel,
+    country: countryLabel,
+    plain: (v) => v,
+    status: (k) => T().statusKeys[k],
+    region: (id) => L(byId[id]).region,
+    cheese: nameOf
+  };
 
   const generators = [
-    (c) => ({ q: `¿De qué leche se elabora ${c.name}?`, options: optionsFrom(species(c), ["Vaca", "Oveja", "Cabra", "Búfala", "Oveja (y algo de cabra)"]), answer: species(c) }),
-    (c) => ({ q: `¿De qué país es ${c.name}?`, options: optionsFrom(country(c), CHEESES.map(country)), answer: country(c) }),
-    (c) => ({ q: `¿Cuál es la clase Make de ${c.name}?`, options: shuffle(Object.keys(MAKE_CLASSES)), answer: c.make }),
-    (c) => ({ q: `¿Qué clase Post-Make corresponde a ${c.name}?`, options: optionsFrom(c.postMake[0], Object.keys(POST_MAKE_CLASSES).filter((p) => !c.postMake.includes(p))), answer: c.postMake[0] }),
-    (c) => ({ q: `¿Qué tipo de protección tiene ${c.name}?`, options: ["PDO", "PGI", "Sin denominación protegida propia"], answer: statusKey(c) }),
-    (c) => ({ q: `¿De qué región procede ${c.name}?`, options: optionsFrom(c.region, CHEESES.filter((x) => country(x) === country(c) || Math.random() < 0.3).map((x) => x.region)), answer: c.region }),
-    (c) => ({ q: `¿Qué queso es? “${mask(pick(c.facts), c)}”`, options: optionsFrom(c.name, otherNames(c)), answer: c.name }),
-    (c) => ({ q: `¿Qué queso tiene este aspecto? “${mask(c.appearance, c)}”`, options: optionsFrom(c.name, otherNames(c)), answer: c.name }),
-    (c) => ({ q: `¿Qué queso sabe así? “${mask(c.flavour, c)}”`, options: optionsFrom(c.name, otherNames(c)), answer: c.name }),
-    (c) => ({ q: `¿Cuál de estos quesos tiene Make = ${c.make}?`, options: optionsFrom(c.name, otherNames(c, (x) => x.make !== c.make)), answer: c.name }),
-    (c) => ({ q: `¿Cuál de estos quesos es de leche de ${species(c).toLowerCase()}?`, options: optionsFrom(c.name, otherNames(c, (x) => species(x) !== species(c))), answer: c.name }),
-    (c) => ({ q: `¿Cuál de estos quesos tiene Post-Make “${c.postMake[0]}”?`, options: optionsFrom(c.name, otherNames(c, (x) => !x.postMake.includes(c.postMake[0]))), answer: c.name })
+    (c) => ({ type: "milk", kind: "species", options: optionsFrom(speciesKey(c), Object.keys(UI.es.species)), answer: speciesKey(c) }),
+    (c) => ({ type: "country", kind: "country", options: optionsFrom(countryKey(c), CHEESES.map(countryKey)), answer: countryKey(c) }),
+    (c) => ({ type: "make", kind: "plain", options: shuffle(Object.keys(MAKE_CLASSES)), answer: c.make }),
+    (c) => ({ type: "postMake", kind: "plain", options: optionsFrom(c.postMake[0], POST_KEYS.filter((p) => !c.postMake.includes(p))), answer: c.postMake[0] }),
+    (c) => ({ type: "status", kind: "status", options: ["PDO", "PGI", "none"], answer: statusKey(c) }),
+    (c) => ({
+      type: "region", kind: "region", answer: c.id,
+      options: optionsFrom(c.id, CHEESES.filter((x) => x.region !== c.region && (countryKey(x) === countryKey(c) || Math.random() < 0.3)).map((x) => x.id))
+    }),
+    (c) => ({ type: "fact", kind: "cheese", fact: Math.floor(Math.random() * c.facts.length), options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
+    (c) => ({ type: "appearance", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
+    (c) => ({ type: "flavour", kind: "cheese", options: optionsFrom(c.id, otherIds(c)), answer: c.id }),
+    (c) => ({ type: "whichMake", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => x.make !== c.make)), answer: c.id }),
+    (c) => ({ type: "whichMilk", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => speciesKey(x) !== speciesKey(c))), answer: c.id }),
+    (c) => ({ type: "whichPost", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => !x.postMake.includes(c.postMake[0]))), answer: c.id })
   ];
+
+  // Texto de la pregunta en el idioma actual
+  function questionText(q) {
+    const c = L(q.cheese);
+    const t = T().quiz.q;
+    switch (q.type) {
+      case "fact": return t.fact(mask(c.facts[q.fact], c));
+      case "appearance": return t.appearance(mask(c.appearance, c));
+      case "flavour": return t.flavour(mask(c.flavour, c));
+      case "whichMake": return t.whichMake(c.make);
+      case "whichMilk": return t.whichMilk(speciesLabel(speciesKey(q.cheese)));
+      case "whichPost": return t.whichPost(c.postMake[0]);
+      default: return t[q.type](c.name);
+    }
+  }
 
   function makeQuestion(c) {
     for (let tries = 0; tries < 10; tries++) {
       const q = pick(generators)(c);
-      if (q && q.options.length >= 2 && q.options.includes(q.answer)) return { ...q, cheese: c };
+      if (q.options.length >= 2 && q.options.includes(q.answer)) return { ...q, cheese: c };
     }
   }
 
   let quiz = null;
+  routes.quiz = () => (quiz && quiz.i < quiz.questions.length ? drawQuestion() : renderQuizStart());
+  routes["quiz-result"] = () => drawResult();
+
   function renderQuizStart() {
-    const best = progress.best ? `<p class="muted small">Mejor resultado: ${progress.best.score}/${progress.best.total}</p>` : "";
+    const t = T().quiz;
+    const best = progress.best ? `<p class="muted small">${t.best(progress.best.score, progress.best.total)}</p>` : "";
     view.append($(`
-      <h2>Quiz</h2>
-      <p class="muted">Preguntas tipo test generadas a partir de las fichas: leche, país, región, protección, Make, Post-Make, aspecto y sabor.</p>
+      <h2>${t.title}</h2>
+      <p class="muted">${t.intro}</p>
       ${best}
-      <h3>Número de preguntas</h3>
+      <h3>${t.count}</h3>
       <div class="chips" id="n">${[10, 25, 50].map((n, i) => `<button class="chip ${i === 0 ? "on" : ""}" data-n="${n}">${n}</button>`).join("")}</div>
-      <h3>Enfoque</h3>
+      <h3>${t.focus}</h3>
       <div class="chips" id="f">
-        <button class="chip on" data-f="all">Todos los quesos</button>
-        <button class="chip" data-f="weak">Mis puntos débiles</button>
+        <button class="chip on" data-f="all">${t.allCheeses}</button>
+        <button class="chip" data-f="weak">${t.weak}</button>
         ${Object.keys(MAKE_CLASSES).map((m) => `<button class="chip" data-f="${m}">${m}</button>`).join("")}
       </div>
-      <button class="btn primary" id="go" style="margin-top:12px">Empezar</button>`));
+      <button class="btn primary" id="go" style="margin-top:12px">${t.start}</button>`));
     let n = 10, focus = "all";
     view.querySelector("#n").onclick = (e) => { if (!e.target.dataset.n) return; n = +e.target.dataset.n; view.querySelectorAll("#n .chip").forEach((x) => x.classList.toggle("on", x === e.target)); };
     view.querySelector("#f").onclick = (e) => { if (!e.target.dataset.f) return; focus = e.target.dataset.f; view.querySelectorAll("#f .chip").forEach((x) => x.classList.toggle("on", x === e.target)); };
@@ -267,107 +448,128 @@
       }
       questions.push(makeQuestion(c));
     }
-    quiz = { questions: focus === "weak" ? questions : shuffle(questions), i: 0, score: 0, misses: [] };
-    view.replaceChildren();
+    quiz = { questions: focus === "weak" ? questions : shuffle(questions), i: 0, score: 0, misses: [], chosen: null, saved: false };
+    current = { tab: "quiz" };
     drawQuestion();
   }
 
   function drawQuestion() {
+    const t = T().quiz;
     const { questions, i } = quiz;
     if (i >= questions.length) return drawResult();
     const q = questions[i];
+    const show = label[q.kind];
     view.replaceChildren($(`
-      <p class="muted small">Pregunta ${i + 1} de ${questions.length} · Aciertos: ${quiz.score}</p>
+      <p class="muted small">${t.progress(i + 1, questions.length, quiz.score)}</p>
       <div class="bar"><i style="width:${(i / questions.length) * 100}%"></i></div>
-      <div class="question">${esc(q.q)}</div>
-      <div class="options">${q.options.map((o) => `<button class="option">${esc(o)}</button>`).join("")}</div>
+      <div class="question">${esc(questionText(q))}</div>
+      <div class="options">${q.options.map((o, k) => `<button class="option" data-k="${k}">${esc(show(o))}</button>`).join("")}</div>
       <div id="after"></div>`));
-    view.querySelectorAll(".option").forEach((b) => (b.onclick = () => answer(b)));
+    view.querySelectorAll(".option").forEach((b) => (b.onclick = () => answer(+b.dataset.k)));
+    if (quiz.chosen !== null) showFeedback();
   }
 
-  function answer(btn) {
+  function answer(k) {
     const q = quiz.questions[quiz.i];
-    const ok = btn.textContent === q.answer;
-    view.querySelectorAll(".option").forEach((b) => {
-      b.disabled = true;
-      if (b.textContent === q.answer) b.classList.add("correct");
-    });
-    if (!ok) { btn.classList.add("wrong"); quiz.misses.push(q); } else quiz.score++;
+    quiz.chosen = k;
+    const ok = q.options[k] === q.answer;
+    if (ok) quiz.score++; else quiz.misses.push(q);
     record(q.cheese.id, ok);
-    const c = q.cheese;
+    showFeedback();
+  }
+
+  function showFeedback() {
+    const t = T().quiz;
+    const q = quiz.questions[quiz.i];
+    const show = label[q.kind];
+    const ok = q.options[quiz.chosen] === q.answer;
+    view.querySelector(".question").nextElementSibling.querySelectorAll(".option").forEach((b) => {
+      b.disabled = true;
+      const v = q.options[+b.dataset.k];
+      if (v === q.answer) b.classList.add("correct");
+      else if (+b.dataset.k === quiz.chosen) b.classList.add("wrong");
+    });
+    const c = L(q.cheese);
     view.querySelector("#after").replaceChildren($(`
-      <div class="explain">${ok ? "✅ ¡Correcto!" : "❌ La respuesta era: <b>" + esc(q.answer) + "</b>"}<br>
-        <b>${esc(c.name)}</b>: ${esc(country(c))} · ${esc(c.milk)} · ${esc(c.status)} · Make ${c.make} · ${c.postMake.join(", ")}
+      <div class="explain">${ok ? t.correct : `${t.wrong} <b>${esc(show(q.answer))}</b>`}<br>
+        <b>${esc(c.name)}</b>: ${esc(countryLabel(countryKey(q.cheese)))} · ${esc(c.milk)} · ${esc(c.status)} · Make ${c.make} · ${c.postMake.join(", ")}
       </div>
       <div class="row" style="margin-top:12px;justify-content:flex-end">
-        <button class="btn primary" id="next">${quiz.i + 1 < quiz.questions.length ? "Siguiente →" : "Ver resultado"}</button>
+        <button class="btn primary" id="next">${quiz.i + 1 < quiz.questions.length ? t.next : t.result}</button>
       </div>`));
-    view.querySelector("#next").onclick = () => { quiz.i++; drawQuestion(); };
+    view.querySelector("#next").onclick = () => { quiz.i++; quiz.chosen = null; drawQuestion(); };
   }
 
   function drawResult() {
+    const t = T().quiz;
     const { score, questions, misses } = quiz;
     const pct = Math.round((score / questions.length) * 100);
-    if (!progress.best || score / questions.length > progress.best.score / progress.best.total) {
-      progress.best = { score, total: questions.length }; save();
+    current = { tab: "quiz-result" };
+    if (!quiz.saved) {
+      quiz.saved = true;
+      if (!progress.best || score / questions.length > progress.best.score / progress.best.total) {
+        progress.best = { score, total: questions.length }; save();
+      }
     }
     view.replaceChildren($(`
-      <h2>Resultado</h2>
+      <h2>${t.resultTitle}</h2>
       <div class="big">${score} / ${questions.length} <span class="muted" style="font-size:1.2rem">(${pct}%)</span></div>
-      <p>${pct >= 80 ? "🏆 ¡Aprobado! (el examen oficial pide un 80%)" : "Sigue practicando: el examen oficial pide un 80%."}</p>
-      ${misses.length ? `<h3>Repasa estas</h3><ul>${misses.map((q) => `<li>${esc(q.q)}<br><b>${esc(q.answer)}</b></li>`).join("")}</ul>` : ""}
+      <p>${pct >= 80 ? t.pass : t.fail}</p>
+      ${misses.length ? `<h3>${t.review}</h3><ul>${misses.map((q) => `<li>${esc(questionText(q))}<br><b>${esc(label[q.kind](q.answer))}</b></li>`).join("")}</ul>` : ""}
       <div class="row" style="margin-top:12px">
-        <button class="btn primary" id="again">Otro quiz</button>
+        <button class="btn primary" id="again">${t.again}</button>
       </div>`));
-    view.querySelector("#again").onclick = () => go("quiz");
+    view.querySelector("#again").onclick = () => { quiz = null; go("quiz"); };
   }
 
   // ---------- Tabla Make / Post-Make ----------
   function renderMatrix() {
-    const posts = Object.keys(POST_MAKE_CLASSES);
+    const t = T().matrix;
     const makes = Object.keys(MAKE_CLASSES);
     const cell = (m, p) => CHEESES.filter((c) => c.make === m && c.postMake.includes(p))
       .map((c) => `<button data-id="${c.id}">${esc(c.name)}</button>`).join("");
     view.append($(`
-      <h2>Tabla Make / Post-Make</h2>
-      <p class="muted small">Cada queso tiene una sola clase Make y puede tener una o más Post-Make. Toca un queso para ver su ficha.</p>
+      <h2>${t.title}</h2>
+      <p class="muted small">${t.help}</p>
       <div class="matrix-wrap"><table class="matrix">
-        <thead><tr><th>Make ↓ / Post-Make →</th>${posts.map((p) => `<th>${p}</th>`).join("")}</tr></thead>
-        <tbody>${makes.map((m) => `<tr><th><span class="tag ${makeClass(m)}">${m}</span></th>${posts.map((p) => `<td>${cell(m, p)}</td>`).join("")}</tr>`).join("")}</tbody>
+        <thead><tr><th>${t.corner}</th>${POST_KEYS.map((p) => `<th>${p}</th>`).join("")}</tr></thead>
+        <tbody>${makes.map((m) => `<tr><th><span class="tag ${makeClass(m)}">${m}</span></th>${POST_KEYS.map((p) => `<td>${cell(m, p)}</td>`).join("")}</tr>`).join("")}</tbody>
       </table></div>
-      <h3>Clases Make</h3>
-      <dl class="legend">${makes.map((m) => `<dt>${m}</dt><dd>${MAKE_CLASSES[m]}</dd>`).join("")}</dl>
-      <h3>Clases Post-Make</h3>
-      <dl class="legend">${posts.map((p) => `<dt>${p}</dt><dd>${POST_MAKE_CLASSES[p]}</dd>`).join("")}</dl>
-      <p class="note">⚠️ La clasificación Post-Make de algunos quesos (p. ej. Block Cheddar, Aged Gouda, Feta, Gruyère, Mimolette) es una interpretación; contrástala con las crib sheets oficiales de la Academy of Cheese.</p>`));
+      <h3>${t.makes}</h3>
+      <dl class="legend">${makes.map((m) => `<dt>${m}</dt><dd>${makeDesc()[m]}</dd>`).join("")}</dl>
+      <h3>${t.posts}</h3>
+      <dl class="legend">${POST_KEYS.map((p) => `<dt>${p}</dt><dd>${postDesc()[p]}</dd>`).join("")}</dl>
+      <p class="note">${t.note}</p>`));
     view.querySelector("table").addEventListener("click", (e) => { const id = e.target.dataset.id; if (id) go("library-detail", id); });
   }
 
   // ---------- Progreso ----------
   function renderProgress() {
+    const t = T().prog;
     const known = CHEESES.filter((c) => progress.known[c.id]).length;
     const totals = Object.values(progress.stats).reduce((a, s) => ({ ok: a.ok + s.ok, ko: a.ko + s.ko }), { ok: 0, ko: 0 });
     const answered = totals.ok + totals.ko;
     const rows = CHEESES.map((c) => ({ c, s: progress.stats[c.id] || { ok: 0, ko: 0 } }))
       .sort((a, b) => weakness(b.c.id) - weakness(a.c.id));
     view.append($(`
-      <h2>Tu progreso</h2>
-      <p>Tarjetas que te sabes: <b>${known} / 25</b></p>
+      <h2>${t.title}</h2>
+      <p>${t.known} <b>${known} / 25</b></p>
       <div class="bar"><i style="width:${(known / 25) * 100}%"></i></div>
-      <p>Preguntas respondidas: <b>${answered}</b> · Acierto global: <b>${answered ? Math.round((totals.ok / answered) * 100) : 0}%</b></p>
-      <h3>Por queso (de peor a mejor)</h3>
+      <p>${t.answered} <b>${answered}</b> · ${t.global} <b>${answered ? Math.round((totals.ok / answered) * 100) : 0}%</b></p>
+      <h3>${t.per}</h3>
       ${rows.map(({ c, s }) => {
         const n = s.ok + s.ko;
         return `<div class="stat-row"><span>${esc(c.name)}</span><span class="muted">${n ? `${s.ok}/${n} (${Math.round((s.ok / n) * 100)}%)` : "—"}</span></div>`;
       }).join("")}
-      <div class="row" style="margin-top:16px"><button class="btn" id="reset">Borrar progreso</button></div>`));
+      <div class="row" style="margin-top:16px"><button class="btn" id="reset">${t.reset}</button></div>`));
     view.querySelector("#reset").onclick = () => {
-      if (confirm("¿Seguro que quieres borrar todo tu progreso?")) {
+      if (confirm(t.confirm)) {
         progress = { stats: {}, known: {}, best: null }; save(); go("progress");
       }
     };
   }
 
+  applyLang();
   go("library");
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
