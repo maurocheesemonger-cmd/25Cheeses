@@ -67,7 +67,7 @@ const CHEESES_EN = {
     milk: "Cow",
     treatment: "Raw",
     status: "PDO / AOP (AOC 1980)",
-    appearance: "Large flat disc (~36 cm, ~3 kg); velvety white rind with reddish patches; straw-coloured paste.",
+    appearance: "Large flat disc (~2.6kg); velvety white rind with reddish patches; straw-coloured paste.",
     flavour: "Mushroom, butter, nuts, vegetal notes; more intense as it ripens.",
     facts: [
       "Bloomy rind of Penicillium candidum (camemberti).",
@@ -91,7 +91,7 @@ const CHEESES_EN = {
   },
   "brillat-savarin": {
     country: "France",
-    region: "Burgundy and Île-de-France",
+    region: "Mainly Normandy and Burgundy (PGI: Aube, Côte-d'Or, Saône-et-Loire, Seine-et-Marne and Yonne)",
     milk: "Cow, with added cream",
     treatment: "Pasteurised or raw",
     status: "PGI / IGP (2017)",
@@ -123,10 +123,10 @@ const CHEESES_EN = {
     milk: "Cow",
     treatment: "Raw or pasteurised",
     status: "PDO / AOP (AOC 1975)",
-    appearance: "Disc with an orange rind (coloured with annatto/roucou) bound by 5 strips of reed or paper.",
+    appearance: "Disc with an orange rind (coloured with annatto/roucou) bound by 3 or 5 strips of sedge.",
     flavour: "Powerful, meaty, farmyard aroma; paste milder than its smell.",
     facts: [
-      "Nicknamed 'the Colonel' for its five strips (like a colonel's stripes).",
+      "Nicknamed 'the Colonel' for its three or five strips of sedge (like a colonel's braids).",
       "The strips (laîches) held the cheese together so it would not slump.",
       "Washed rind → Brevibacterium linens-type bacteria."
     ]
@@ -141,7 +141,7 @@ const CHEESES_EN = {
     flavour: "Meaty, salty, intense; creamy paste, almost liquid in the centre.",
     facts: [
       "Washed with Marc de Bourgogne (grape-pomace brandy).",
-      "Almost disappeared after World War II; revived by Robert Berthaut in 1956.",
+      "Almost disappeared after World War II; revived by the brothers Robert and Simone Berthaut in 1956.",
       "Mainly lactic curd."
     ]
   },
@@ -175,7 +175,7 @@ const CHEESES_EN = {
   },
   "cloth-bound-cheshire": {
     country: "United Kingdom (England)",
-    region: "Cheshire and Shropshire",
+    region: "Cheshire Plain",
     milk: "Cow",
     treatment: "Raw (e.g. Appleby's) or pasteurised",
     status: "Not protected",
@@ -193,7 +193,7 @@ const CHEESES_EN = {
     milk: "Cow",
     treatment: "Pasteurised",
     status: "Not protected",
-    appearance: "Rindless rectangular blocks (~20 kg), matured in plastic/vacuum packs.",
+    appearance: "Rindless rectangular blocks (18kg), matured in plastic/vacuum packs.",
     flavour: "Milky, sweet, slightly acidic; from mild to extra mature.",
     facts: [
       "Cheddaring: blocks of curd are stacked and turned to expel whey and develop acidity.",
@@ -210,7 +210,7 @@ const CHEESES_EN = {
     appearance: "Tall wheel wrapped in lard-rubbed cloth; natural rind with moulds; yellow paste.",
     flavour: "Complex: brothy, nutty, earthy, fruity, long finish.",
     facts: [
-      "Cheddaring + milling + pressing; matured for 12 months or more.",
+      "Cheddaring + milling + pressing; matured for 3 to 24 months (the West Country Farmhouse Cheddar PDO requires at least 9).",
       "The cloth is rubbed with lard and lets the cheese breathe.",
       "Examples: Montgomery's, Keen's, Westcombe (Somerset Artisan Cheddar)."
     ]
@@ -361,7 +361,7 @@ const CHEESES_EN = {
     milk: "Cow",
     treatment: "Raw (mandatory)",
     status: "PDO / DOP (1996)",
-    appearance: "Large wheel (~40 kg); golden rind with the dotted name; grainy paste (grana).",
+    appearance: "Large wheel (~38kg); golden rind with the dotted name; grainy paste (grana).",
     flavour: "Umami, brothy, nutty, pineapple, salty; crunchy crystals.",
     facts: [
       "Evening milk skimmed by natural creaming + whole morning milk.",

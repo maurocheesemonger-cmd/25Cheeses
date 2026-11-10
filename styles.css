@@ -108,7 +108,7 @@ h3 { margin: 18px 0 6px; font-size: 1rem; }
 }
 .card:hover { border-color: var(--accent); }
 .card { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; }
-.card .tag { white-space: normal; }
+.card .tag, .detail .tag, .face .tag { white-space: normal; }
 .card .name { font-weight: 650; }
 .card .thumb { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; margin-bottom: 8px; background: var(--surface-2); }
 img.photo { display: block; width: 100%; aspect-ratio: 4 / 3; max-height: 260px; object-fit: contain; border-radius: 12px; margin: 0 auto 12px; background: var(--surface-2); }
@@ -181,4 +181,6 @@ table.matrix { border-collapse: collapse; width: 100%; font-size: .82rem; min-wi
 .legend dd { margin: 0; color: var(--muted); font-size: .9rem; }
 
 .stat-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.exam-box { margin-top: 20px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.exam-box p { margin: 8px 0 0; }
 .note { font-size: .82rem; color: var(--muted); margin-top: 20px; }

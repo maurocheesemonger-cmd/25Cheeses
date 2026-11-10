@@ -10,7 +10,8 @@
       tabs: { library: "Fichas", cards: "Tarjetas", quiz: "Quiz", matrix: "Tabla", progress: "Progreso" },
       switchTo: "EN", switchLabel: "Switch to English",
       lib: { title: "Los 25 quesos", search: "Buscar por nombre, país, leche…", all: "Todos", none: "Sin resultados.", back: "← Volver a las fichas", prev: "← Anterior", next: "Siguiente →" },
-      f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", rennet: "Cuajo", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen" },
+      f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", rennet: "Cuajo", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen",
+        official: "Ficha oficial (Academy of Cheese 2026)", age: "Edad típica", weight: "Peso aproximado", breed: "Raza", rennetOff: "Cuajo", milkOff: "Leche cruda / pasteurizada", protectedOff: "Protección (requisitos)", variations: "Variantes habituales", pairing: "Maridaje" },
       cards: {
         title: "Tarjetas", help: "Toca la tarjeta para darle la vuelta. Marca si te la sabes; las que no, vuelven a salir.",
         all: "Todas (25)", pending: (n) => `Solo las que no sé (${n})`, reverse: "Al revés: adivina el queso", photo: "📷 Foto: adivina el queso",
@@ -20,7 +21,8 @@
       quiz: {
         title: "Quiz", intro: "Preguntas tipo test generadas a partir de las fichas: leche, país, región, protección, Make, Post-Make (y sus sub-clases), aspecto y sabor.",
         best: (s, t) => `Mejor resultado: ${s}/${t}`, count: "Número de preguntas", focus: "Enfoque",
-        allCheeses: "Todos los quesos", weak: "Mis puntos débiles", start: "Empezar",
+        allCheeses: "Todos los quesos", weak: "Mis puntos débiles", hard: "🔥 Difícil (fichas oficiales)", start: "Empezar",
+        exam: "🎓 Simulacro de examen", examHelp: "30 preguntas · 30 minutos · 80% para aprobar. Mezcla preguntas básicas y difíciles.", timeUp: "⏰ ¡Se acabó el tiempo!",
         progress: (i, n, s) => `Pregunta ${i} de ${n} · Aciertos: ${s}`,
         correct: "✅ ¡Correcto!", wrong: "❌ La respuesta era:", next: "Siguiente →", result: "Ver resultado",
         resultTitle: "Resultado", pass: "🏆 ¡Aprobado! (el examen oficial pide un 80%)", fail: "Sigue practicando: el examen oficial pide un 80%.",
@@ -38,6 +40,11 @@
           appearance: (t) => `¿Qué queso tiene este aspecto? “${t}”`,
           flavour: (t) => `¿Qué queso sabe así? “${t}”`,
           photo: () => "¿Qué queso es el de la foto?",
+          off_age: (n) => `¿Cuál es la edad típica de ${n}?`,
+          off_weight: (n) => `¿Cuál es el peso aproximado de ${n}?`,
+          off_breed: (n) => `¿Qué raza de animal indica la ficha de ${n}?`,
+          off_protected: (n) => `¿Qué exige la protección de ${n}?`,
+          whichPairing: (p) => `¿Con qué queso recomienda la ficha este maridaje? “${p}”`,
           whichMake: (m) => `¿Cuál de estos quesos tiene Make = ${m}?`,
           whichMilk: (s) => `¿Cuál de estos quesos es de leche de ${s.toLowerCase()}?`,
           whichPost: (p) => `¿Cuál de estos quesos tiene Post-Make “${p}”?`
@@ -60,7 +67,8 @@
       tabs: { library: "Profiles", cards: "Cards", quiz: "Quiz", matrix: "Matrix", progress: "Progress" },
       switchTo: "ES", switchLabel: "Cambiar a español",
       lib: { title: "The 25 cheeses", search: "Search by name, country, milk…", all: "All", none: "No results.", back: "← Back to profiles", prev: "← Previous", next: "Next →" },
-      f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", rennet: "Rennet", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts" },
+      f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", rennet: "Rennet", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts",
+        official: "Official profile (Academy of Cheese 2026)", age: "Typical age", weight: "Approximate weight", breed: "Breed", rennetOff: "Rennet", milkOff: "Raw / pasteurised milk", protectedOff: "Protection (requirements)", variations: "Commonly encountered variations", pairing: "Perfect partners" },
       cards: {
         title: "Flashcards", help: "Tap the card to flip it. Mark whether you know it; the ones you don't will come back.",
         all: "All (25)", pending: (n) => `Only the ones I don't know (${n})`, reverse: "Reverse: guess the cheese", photo: "📷 Photo: guess the cheese",
@@ -70,7 +78,8 @@
       quiz: {
         title: "Quiz", intro: "Multiple-choice questions generated from the profiles: milk, country, region, protection, Make, Post-Make (and their sub-classes), appearance and flavour.",
         best: (s, t) => `Best score: ${s}/${t}`, count: "Number of questions", focus: "Focus",
-        allCheeses: "All cheeses", weak: "My weak spots", start: "Start",
+        allCheeses: "All cheeses", weak: "My weak spots", hard: "🔥 Hard (official profiles)", start: "Start",
+        exam: "🎓 Mock exam", examHelp: "30 questions · 30 minutes · 80% to pass. Mixes basic and hard questions.", timeUp: "⏰ Time is up!",
         progress: (i, n, s) => `Question ${i} of ${n} · Correct: ${s}`,
         correct: "✅ Correct!", wrong: "❌ The answer was:", next: "Next →", result: "See result",
         resultTitle: "Result", pass: "🏆 Pass! (the official exam requires 80%)", fail: "Keep practising: the official exam requires 80%.",
@@ -88,6 +97,11 @@
           appearance: (t) => `Which cheese looks like this? “${t}”`,
           flavour: (t) => `Which cheese tastes like this? “${t}”`,
           photo: () => "Which cheese is in the photo?",
+          off_age: (n) => `What is the typical age of ${n}?`,
+          off_weight: (n) => `What is the approximate weight of ${n}?`,
+          off_breed: (n) => `Which animal breed does the ${n} profile give?`,
+          off_protected: (n) => `What does the protection of ${n} require?`,
+          whichPairing: (p) => `Which cheese does the profile pair with this? “${p}”`,
           whichMake: (m) => `Which of these cheeses has Make = ${m}?`,
           whichMilk: (s) => `Which of these cheeses is made from ${s.toLowerCase()}'s milk?`,
           whichPost: (p) => `Which of these cheeses has Post-Make “${p}”?`
@@ -113,6 +127,9 @@
 
   // Queso con los textos en el idioma actual
   const L = (c) => (lang === "en" ? { ...c, ...CHEESES_EN[c.id] } : c);
+  // Datos de la ficha oficial en el idioma actual
+  const O = (id) => (OFFICIAL[id] ? OFFICIAL[id][lang] : null);
+  const hardText = (id, hi) => OFFICIAL[id].hard[hi][lang === "en" ? 1 : 0];
   const makeDesc = () => (lang === "en" ? MAKE_CLASSES_EN : MAKE_CLASSES);
   const postDesc = () => (lang === "en" ? POST_MAKE_CLASSES_EN : POST_MAKE_CLASSES);
 
@@ -261,7 +278,16 @@
         <dt>${f.flavour}</dt><dd>${esc(c.flavour)}</dd>
       </dl>
       <h3>${f.keys}</h3>
-      ${factsList(c)}`;
+      ${factsList(c)}
+      ${officialHTML(c.id)}`;
+  }
+
+  function officialHTML(id) {
+    const o = O(id), f = T().f;
+    if (!o) return "";
+    const rows = [["age", f.age], ["weight", f.weight], ["breed", f.breed], ["rennet", f.rennetOff], ["milk", f.milkOff],
+      ["protected", f.protectedOff], ["variations", f.variations], ["pairing", f.pairing]].filter(([k]) => o[k]);
+    return `<h3>${f.official}</h3><dl>${rows.map(([k, t]) => `<dt>${t}</dt><dd>${esc(o[k])}</dd>`).join("")}</dl>`;
   }
 
   routes["library-detail"] = (id) => {
@@ -340,7 +366,8 @@
          <p>🏷️ ${esc(c.status)}</p>
          <p>${classTags(c, true)}</p>
          <p>👀 ${esc(c.appearance)}</p><p>👅 ${esc(c.flavour)}</p>
-         ${factsList(c)}`;
+         ${factsList(c)}
+         ${O(c.id) ? `<p class="muted small">⏳ ${esc(O(c.id).age)}${O(c.id).weight ? ` · ⚖️ ${esc(O(c.id).weight)}` : ""} · 🍷 ${esc(O(c.id).pairing)}</p>` : ""}`;
     box.replaceChildren($(`
       <p class="muted small">${deckPos + 1} / ${deck.ids.length}${progress.known[c.id] ? t.known : ""}</p>
       <div class="flash"><div class="flash-inner">
@@ -388,8 +415,45 @@
     plain: (v) => v,
     status: (k) => T().statusKeys[k],
     region: (id) => L(byId[id]).region,
-    cheese: nameOf
+    cheese: nameOf,
+    // "id::campo" → valor de la ficha oficial
+    off: (v) => { const [id, f] = v.split("::"); return O(id)[f]; },
+    // "id::pregunta::opción" → texto de una pregunta difícil
+    hardopt: (v) => { const [id, hi, k] = v.split("::"); return hardText(id, +hi)[+k]; }
   };
+
+  const subMakeGen = (c) => c.subMake && ({ type: "subMake", kind: "plain", options: optionsFrom(c.subMake, CHEESES.map((x) => x.subMake).filter(Boolean)), answer: c.subMake });
+  const subPostGen = (c) => {
+    const subs = c.subPostMake.filter(Boolean);
+    if (!subs.length) return null;
+    const s = pick(subs);
+    return { type: "subPostMake", kind: "plain", answer: s,
+      options: optionsFrom(s, CHEESES.flatMap((x) => x.subPostMake).filter((x) => x && !subs.includes(x))) };
+  };
+
+  // Preguntas difíciles sacadas de las fichas oficiales
+  const hardGen = (c) => {
+    const h = OFFICIAL[c.id] && OFFICIAL[c.id].hard;
+    if (!h || !h.length) return null;
+    const hi = Math.floor(Math.random() * h.length);
+    return { type: "hard", kind: "hardopt", hi, options: shuffle([1, 2, 3, 4]).map((k) => `${c.id}::${hi}::${k}`), answer: `${c.id}::${hi}::1` };
+  };
+  // Dato oficial (edad, peso, raza, protección): las opciones son valores de otros quesos, sin repetir
+  const offGen = (field) => (c) => {
+    const val = OFFICIAL[c.id] && OFFICIAL[c.id].es[field];
+    const usable = (v) => v && !/^(No especificada|Varias)/.test(v);
+    if (!usable(val)) return null;
+    const seen = new Set([val]);
+    const others = shuffle(CHEESES.filter((x) => x !== c)).filter((x) => {
+      const v = OFFICIAL[x.id] && OFFICIAL[x.id].es[field];
+      if (!usable(v) || seen.has(v)) return false;
+      seen.add(v); return true;
+    });
+    return { type: "off_" + field, kind: "off", options: optionsFrom(`${c.id}::${field}`, others.map((x) => `${x.id}::${field}`)), answer: `${c.id}::${field}` };
+  };
+  const pairingGen = (c) => O(c.id) && O(c.id).pairing &&
+    ({ type: "whichPairing", kind: "cheese", options: optionsFrom(c.id, otherIds(c, (x) => OFFICIAL[x.id])), answer: c.id });
+  const hardGenerators = [hardGen, hardGen, hardGen, hardGen, hardGen, hardGen, hardGen, offGen("age"), offGen("weight"), offGen("breed"), offGen("protected"), pairingGen, subMakeGen, subPostGen];
 
   const generators = [
     (c) => ({ type: "milk", kind: "species", options: optionsFrom(speciesKey(c), Object.keys(UI.es.species)), answer: speciesKey(c) }),
@@ -400,14 +464,8 @@
       const p = pick(c.postMake);
       return { type: "postMake", kind: "plain", options: optionsFrom(p, POST_KEYS.filter((x) => !c.postMake.includes(x))), answer: p };
     },
-    (c) => c.subMake && ({ type: "subMake", kind: "plain", options: optionsFrom(c.subMake, CHEESES.map((x) => x.subMake).filter(Boolean)), answer: c.subMake }),
-    (c) => {
-      const subs = c.subPostMake.filter(Boolean);
-      if (!subs.length) return null;
-      const s = pick(subs);
-      return { type: "subPostMake", kind: "plain", answer: s,
-        options: optionsFrom(s, CHEESES.flatMap((x) => x.subPostMake).filter((x) => x && !subs.includes(x))) };
-    },
+    subMakeGen,
+    subPostGen,
     (c) => ({ type: "status", kind: "status", options: ["PDO", "PGI", "none"], answer: statusKey(c) }),
     (c) => ({
       type: "region", kind: "region", answer: c.id,
@@ -437,19 +495,23 @@
       case "whichMake": return t.whichMake(c.make);
       case "whichMilk": return t.whichMilk(speciesLabel(speciesKey(q.cheese)));
       case "whichPost": return t.whichPost(q.pm);
+      case "hard": return hardText(q.cheese.id, q.hi)[0];
+      case "whichPairing": return t.whichPairing(O(q.cheese.id).pairing);
       default: return t[q.type](c.name);
     }
   }
 
-  function makeQuestion(c) {
-    for (let tries = 0; tries < 10; tries++) {
-      const q = pick(generators)(c);
+  // mode: "hard" solo preguntas difíciles; "exam" mezcla (40% difíciles); si no, básicas
+  function makeQuestion(c, mode) {
+    for (let tries = 0; tries < 20; tries++) {
+      const list = mode === "hard" || (mode === "exam" && Math.random() < 0.4) ? hardGenerators : generators;
+      const q = pick(list)(c);
       if (q && q.options.length >= 2 && q.options.includes(q.answer)) return { ...q, cheese: c };
     }
   }
 
   let quiz = null;
-  routes.quiz = () => (quiz && quiz.i < quiz.questions.length ? drawQuestion() : renderQuizStart());
+  routes.quiz = () => (quiz && (quiz.i < quiz.questions.length || !quiz.saved) ? drawQuestion() : renderQuizStart());
   routes["quiz-result"] = () => drawResult();
 
   function renderQuizStart() {
@@ -465,13 +527,19 @@
       <div class="chips" id="f">
         <button class="chip on" data-f="all">${t.allCheeses}</button>
         <button class="chip" data-f="weak">${t.weak}</button>
+        <button class="chip" data-f="hard">${t.hard}</button>
         ${Object.keys(MAKE_CLASSES).map((m) => `<button class="chip" data-f="${m}">${m}</button>`).join("")}
       </div>
-      <button class="btn primary" id="go" style="margin-top:12px">${t.start}</button>`));
+      <button class="btn primary" id="go" style="margin-top:12px">${t.start}</button>
+      <div class="exam-box">
+        <button class="btn primary" id="exam">${t.exam}</button>
+        <p class="muted small">${t.examHelp}</p>
+      </div>`));
     let n = 10, focus = "all";
     view.querySelector("#n").onclick = (e) => { if (!e.target.dataset.n) return; n = +e.target.dataset.n; view.querySelectorAll("#n .chip").forEach((x) => x.classList.toggle("on", x === e.target)); };
     view.querySelector("#f").onclick = (e) => { if (!e.target.dataset.f) return; focus = e.target.dataset.f; view.querySelectorAll("#f .chip").forEach((x) => x.classList.toggle("on", x === e.target)); };
     view.querySelector("#go").onclick = () => startQuiz(n, focus);
+    view.querySelector("#exam").onclick = () => startQuiz(30, "exam");
   }
 
   function startQuiz(n, focus) {
@@ -488,9 +556,14 @@
       } else {
         c = pool[i % pool.length];
       }
-      questions.push(makeQuestion(c));
+      questions.push(makeQuestion(c, focus));
     }
+    if (quiz && quiz.timer) clearInterval(quiz.timer);
     quiz = { questions: focus === "weak" ? questions : shuffle(questions), i: 0, score: 0, misses: [], chosen: null, saved: false };
+    if (focus === "exam") {
+      quiz.deadline = Date.now() + 30 * 60 * 1000;
+      quiz.timer = setInterval(tick, 1000);
+    }
     current = { tab: "quiz" };
     drawQuestion();
   }
@@ -502,7 +575,7 @@
     const q = questions[i];
     const show = label[q.kind];
     view.replaceChildren($(`
-      <p class="muted small">${t.progress(i + 1, questions.length, quiz.score)}</p>
+      <p class="muted small">${t.progress(i + 1, questions.length, quiz.score)}${quiz.deadline ? ` · <b id="timer">${clock()}</b>` : ""}</p>
       <div class="bar"><i style="width:${(i / questions.length) * 100}%"></i></div>
       <div class="question">${esc(questionText(q))}</div>
       ${q.type === "photo" ? photoImg(q.cheese.id, "photo quiz-photo", "", q.pi) : ""}
@@ -543,11 +616,30 @@
     view.querySelector("#next").onclick = () => { quiz.i++; quiz.chosen = null; drawQuestion(); };
   }
 
+  // Cronómetro del simulacro
+  const clock = () => {
+    const s = Math.max(0, Math.round((quiz.deadline - Date.now()) / 1000));
+    return `⏱ ${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  };
+  function tick() {
+    if (!quiz || !quiz.deadline) return;
+    if (Date.now() >= quiz.deadline) {
+      clearInterval(quiz.timer); quiz.timer = null;
+      quiz.timedOut = true;
+      quiz.i = quiz.questions.length;
+      if (current.tab === "quiz") drawResult();
+      return;
+    }
+    const el = document.getElementById("timer");
+    if (el) el.textContent = clock();
+  }
+
   function drawResult() {
     const t = T().quiz;
     const { score, questions, misses } = quiz;
     const pct = Math.round((score / questions.length) * 100);
     current = { tab: "quiz-result" };
+    if (quiz.timer) { clearInterval(quiz.timer); quiz.timer = null; }
     if (!quiz.saved) {
       quiz.saved = true;
       if (!progress.best || score / questions.length > progress.best.score / progress.best.total) {
@@ -557,6 +649,7 @@
     view.replaceChildren($(`
       <h2>${t.resultTitle}</h2>
       <div class="big">${score} / ${questions.length} <span class="muted" style="font-size:1.2rem">(${pct}%)</span></div>
+      ${quiz.timedOut ? `<p><b>${t.timeUp}</b></p>` : ""}
       <p>${pct >= 80 ? t.pass : t.fail}</p>
       ${misses.length ? `<h3>${t.review}</h3><ul>${misses.map((q) => `<li>${esc(questionText(q))}<br><b>${esc(label[q.kind](q.answer))}</b></li>`).join("")}</ul>` : ""}
       <div class="row" style="margin-top:12px">
