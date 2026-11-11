@@ -12,6 +12,7 @@ Una app web sencilla para estudiar los **25 quesos del Level 1 (Associate) de la
 - **Fotos**: si hay fotos en `photos/` (registradas en `photos.js`), salen en las fichas, en las tarjetas (modo "Foto: adivina el queso") y en el quiz ("¿Qué queso es el de la foto?").
 - **Ficha oficial**: cada queso muestra los datos de las fichas de la Cheese Library de 2026 (`quesos/*.pdf`, recogidos en `official.js`): edad, peso, raza, cuajo, protección, variantes y maridaje.
 - **Quiz difícil y simulacro**: el modo "🔥 Difícil" usa más de 100 preguntas sacadas de esas fichas; el "🎓 Simulacro de examen" son 30 preguntas en 30 minutos, con un 80% para aprobar.
+- **🏆 MasterRind** (en inglés): simula la ronda final del Young Cheesemonger of the Year. Eliges uno de 8 sobres, cada uno con 10 preguntas (4 de los 25 quesos, 3 de Level 1, 2 de patrocinadores y Academy of Cheese, 1 de los World Cheese Awards). Tiene temporizador opcional de 30 s y un repaso de los fallos, que se guardan en el navegador. El banco de preguntas está en `masterrind.js`.
 - **Idioma**: botón ES / EN arriba a la derecha para pasar toda la app (interfaz y fichas) a español o inglés.
 
 Funciona en el móvil, se puede añadir a la pantalla de inicio y, después de abrirla una vez, también sin conexión.

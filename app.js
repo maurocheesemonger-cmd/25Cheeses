@@ -7,7 +7,7 @@
   const UI = {
     es: {
       title: "25 Cheeses · Level 1",
-      tabs: { library: "Fichas", cards: "Tarjetas", quiz: "Quiz", matrix: "Tabla", progress: "Progreso" },
+      tabs: { library: "Fichas", cards: "Tarjetas", quiz: "Quiz", masterrind: "MasterRind", matrix: "Tabla", progress: "Progreso" },
       switchTo: "EN", switchLabel: "Switch to English",
       lib: { title: "Los 25 quesos", search: "Buscar por nombre, país, leche…", all: "Todos", none: "Sin resultados.", back: "← Volver a las fichas", prev: "← Anterior", next: "Siguiente →" },
       f: { country: "País", region: "Región", milk: "Leche", treatment: "Tratamiento", rennet: "Cuajo", status: "Protección", appearance: "Aspecto", flavour: "Sabor / textura", keys: "Claves para el examen",
@@ -64,7 +64,7 @@
     },
     en: {
       title: "25 Cheeses · Level 1",
-      tabs: { library: "Profiles", cards: "Cards", quiz: "Quiz", matrix: "Matrix", progress: "Progress" },
+      tabs: { library: "Profiles", cards: "Cards", quiz: "Quiz", masterrind: "MasterRind", matrix: "Matrix", progress: "Progress" },
       switchTo: "ES", switchLabel: "Cambiar a español",
       lib: { title: "The 25 cheeses", search: "Search by name, country, milk…", all: "All", none: "No results.", back: "← Back to profiles", prev: "← Previous", next: "Next →" },
       f: { country: "Country", region: "Region", milk: "Milk", treatment: "Treatment", rennet: "Rennet", status: "Protection", appearance: "Appearance", flavour: "Flavour / texture", keys: "Key exam facts",
@@ -709,6 +709,9 @@
   }
 
   applyLang();
+  // Lo que necesitan otros módulos (masterrind.js) para añadir su pantalla
+  window.APP = { routes, view, $, esc, shuffle, currentTab: () => current.tab };
+
   go("library");
 
   if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
